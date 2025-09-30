@@ -1,4 +1,4 @@
-import { Search, Bell, Menu, User, BookOpen } from "lucide-react";
+import { Bell, Menu, User, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -33,12 +33,8 @@ export const Navbar = () => {
             </div>
           </div>
 
-          {/* Right side - Search, notifications, user */}
+          {/* Right side - notifications, user */}
           <div className="flex items-center gap-2 sm:gap-4">
-            <Button variant="ghost" size="icon" className="hidden sm:flex">
-              <Search className="h-5 w-5" />
-            </Button>
-            
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="relative">

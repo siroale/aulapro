@@ -1,196 +1,180 @@
-import { Course, calendarEvents } from "@/data/coursesData";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Download, Calendar, AlertCircle } from "lucide-react";
+import { Clock, MapPin, Mail, Download, AlertCircle, FileText } from "lucide-react";
+import type { Course } from "@/data/coursesData";
+import { calendarEvents } from "@/data/coursesData";
 
 interface GeneralInfoTabProps {
   course: Course;
 }
 
 export const GeneralInfoTab = ({ course }: GeneralInfoTabProps) => {
-  // Filter upcoming deliverables for this course
-  const courseDeliverables = calendarEvents
+  // Filter events for this specific course
+  const courseEvents = calendarEvents.filter((event) => event.courseId === course.id);
+  
+  // Get upcoming events (next 2 weeks)
+  const today = new Date();
+  const twoWeeksFromNow = new Date(today.getTime() + 14 * 24 * 60 * 60 * 1000);
+  
+  const upcomingEvents = courseEvents
     .filter((event) => {
       const eventDate = new Date(event.date);
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      return (
-        event.courseId === course.id &&
-        eventDate >= today &&
-        (event.type === "exam" || event.type === "assignment" || event.type === "project")
-      );
+      return eventDate >= today && eventDate <= twoWeeksFromNow;
     })
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-    .slice(0, 5);
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+  const getEventIcon = (type: string) => {
+    switch (type) {
+      case "exam":
+        return AlertCircle;
+      case "assignment":
+        return FileText;
+      default:
+        return Clock;
+    }
+  };
 
   const getEventColor = (type: string) => {
     switch (type) {
       case "exam":
-        return "bg-event-exam";
+        return "text-event-exam";
       case "assignment":
-        return "bg-event-assignment";
-      case "project":
-        return "bg-event-project";
+        return "text-event-assignment";
       default:
-        return "bg-event-other";
+        return "text-primary";
     }
   };
 
-  const getEventLabel = (type: string) => {
-    switch (type) {
-      case "exam":
-        return "Examen";
-      case "assignment":
-        return "Tarea";
-      case "project":
-        return "Proyecto";
-      default:
-        return "Evento";
-    }
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("es-ES", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    });
-  };
-
-  const getDaysUntil = (dateString: string) => {
-    const eventDate = new Date(dateString);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    eventDate.setHours(0, 0, 0, 0);
-    const diffTime = eventDate.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 0) return "Hoy";
-    if (diffDays === 1) return "Mañana";
-    return `en ${diffDays} días`;
-  };
-
-  const handleDownload = (fileName: string) => {
-    // In a real app, this would trigger an actual download
-    console.log(`Downloading ${fileName}`);
+  const handleDownload = () => {
+    window.open("/mockup.pdf", "_blank");
   };
 
   return (
     <div className="space-y-6">
       {/* Upcoming Deliverables */}
-      {courseDeliverables.length > 0 && (
-        <Card className="p-6 border-primary/20 bg-primary/5">
-          <div className="flex items-center gap-2 mb-4">
-            <AlertCircle className="h-5 w-5 text-primary" />
-            <h3 className="text-lg font-semibold text-foreground">
-              Próximas Entregas de Este Curso
-            </h3>
-          </div>
+      {upcomingEvents.length > 0 && (
+        <Card className="p-6">
+          <h3 className="text-lg font-semibold text-foreground mb-4">
+            Próximas Entregas de Este Curso
+          </h3>
           <div className="space-y-3">
-            {courseDeliverables.map((event) => (
-              <div
-                key={event.id}
-                className="flex items-center justify-between p-3 rounded-lg bg-background border border-border"
-              >
-                <div className="flex items-center gap-3">
-                  <div className={`w-2 h-2 rounded-full ${getEventColor(event.type)}`} />
-                  <div>
-                    <p className="text-sm font-medium text-foreground">{event.title}</p>
-                    <p className="text-xs text-muted-foreground">{getEventLabel(event.type)}</p>
+            {upcomingEvents.map((event) => {
+              const Icon = getEventIcon(event.type);
+              return (
+                <div
+                  key={event.id}
+                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors"
+                >
+                  <Icon className={`h-5 w-5 ${getEventColor(event.type)}`} />
+                  <div className="flex-1">
+                    <span className="text-sm font-medium text-foreground">{event.title}</span>
                   </div>
+                  <span className="text-sm text-muted-foreground">
+                    {new Date(event.date).toLocaleDateString("es-ES", {
+                      weekday: "short",
+                      day: "numeric",
+                      month: "short",
+                    })}
+                  </span>
                 </div>
-                <div className="text-right">
-                  <p className="text-sm font-medium text-foreground">{formatDate(event.date)}</p>
-                  <Badge variant="outline" className="text-xs">
-                    {getDaysUntil(event.date)}
-                  </Badge>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </Card>
       )}
 
-      {/* Course Information */}
+      {/* Course Description */}
       <Card className="p-6">
-        <h2 className="text-xl font-semibold text-foreground mb-4">
-          Información del Curso
-        </h2>
+        <h3 className="text-lg font-semibold text-foreground mb-4">Descripción del Curso</h3>
+        <p className="text-foreground mb-6">{course.description}</p>
+        
+        <div className="flex flex-wrap gap-3">
+          <Button onClick={handleDownload} variant="outline" className="gap-2">
+            <Download className="h-4 w-4" />
+            Descargar Programa
+          </Button>
+          <Button onClick={handleDownload} variant="outline" className="gap-2">
+            <Download className="h-4 w-4" />
+            Descargar Planificación
+          </Button>
+        </div>
+      </Card>
+
+      {/* Paralelo */}
+      <Card className="p-6">
+        <h3 className="text-lg font-semibold text-foreground mb-4">Información de Inscripción</h3>
+        <div className="flex items-center gap-2">
+          <Badge variant="secondary" className="text-base px-4 py-2">
+            Paralelo: 200
+          </Badge>
+        </div>
+      </Card>
+
+      {/* Professor */}
+      <Card className="p-6">
+        <h3 className="text-lg font-semibold text-foreground mb-4">Profesor(a)</h3>
+        <div className="space-y-2">
+          <p className="text-foreground font-medium">{course.instructor}</p>
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Mail className="h-4 w-4" />
+            <a href="mailto:maria.gonzalez@usm.cl" className="hover:text-primary transition-colors">
+              maria.gonzalez@usm.cl
+            </a>
+          </div>
+        </div>
+      </Card>
+
+      {/* Teaching Assistants */}
+      <Card className="p-6">
+        <h3 className="text-lg font-semibold text-foreground mb-4">Ayudantes</h3>
         <div className="space-y-4">
           <div>
-            <h3 className="text-sm font-medium text-muted-foreground mb-1">
-              Código
-            </h3>
-            <p className="text-foreground">{course.code}</p>
-          </div>
-          <div>
-            <h3 className="text-sm font-medium text-muted-foreground mb-1">
-              Paralelo
-            </h3>
-            <p className="text-foreground">200</p>
-          </div>
-          <div>
-            <h3 className="text-sm font-medium text-muted-foreground mb-1">
-              Nombre
-            </h3>
-            <p className="text-foreground">{course.name}</p>
-          </div>
-          <div>
-            <h3 className="text-sm font-medium text-muted-foreground mb-1">
-              Departamento
-            </h3>
-            <Badge>{course.department}</Badge>
-          </div>
-          <div>
-            <h3 className="text-sm font-medium text-muted-foreground mb-1">
-              Profesor(a)
-            </h3>
-            <p className="text-foreground">{course.instructor}</p>
-            <p className="text-sm text-muted-foreground">maria.gonzalez@usm.cl</p>
-          </div>
-          <div>
-            <h3 className="text-sm font-medium text-muted-foreground mb-1">
-              Ayudantes
-            </h3>
-            <div className="space-y-2">
-              <div>
-                <p className="text-sm text-foreground">Javier Morales</p>
-                <p className="text-xs text-muted-foreground">javier.morales@usm.cl</p>
-              </div>
-              <div>
-                <p className="text-sm text-foreground">Carolina Fuentes</p>
-                <p className="text-xs text-muted-foreground">carolina.fuentes@usm.cl</p>
-              </div>
-              <div>
-                <p className="text-sm text-foreground">Diego Valenzuela</p>
-                <p className="text-xs text-muted-foreground">diego.valenzuela@usm.cl</p>
-              </div>
+            <p className="text-foreground font-medium">Carlos Méndez</p>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Mail className="h-4 w-4" />
+              <a href="mailto:carlos.mendez@usm.cl" className="hover:text-primary transition-colors">
+                carlos.mendez@usm.cl
+              </a>
             </div>
           </div>
           <div>
-            <h3 className="text-sm font-medium text-muted-foreground mb-1">
-              Descripción
-            </h3>
-            <p className="text-foreground mb-4">{course.description}</p>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Button 
-                variant="outline" 
-                className="gap-2" 
-                onClick={() => window.open("/mockup.pdf", "_blank")}
-              >
-                <Download className="h-4 w-4" />
-                Descargar Programa
-              </Button>
-              <Button 
-                variant="outline" 
-                className="gap-2" 
-                onClick={() => window.open("/mockup.pdf", "_blank")}
-              >
-                <Download className="h-4 w-4" />
-                Descargar Planificación
-              </Button>
+            <p className="text-foreground font-medium">Ana Torres</p>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Mail className="h-4 w-4" />
+              <a href="mailto:ana.torres@usm.cl" className="hover:text-primary transition-colors">
+                ana.torres@usm.cl
+              </a>
+            </div>
+          </div>
+          <div>
+            <p className="text-foreground font-medium">Diego Castro</p>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Mail className="h-4 w-4" />
+              <a href="mailto:diego.castro@usm.cl" className="hover:text-primary transition-colors">
+                diego.castro@usm.cl
+              </a>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      {/* Schedule */}
+      <Card className="p-6">
+        <h3 className="text-lg font-semibold text-foreground mb-4">Horario</h3>
+        <div className="space-y-3">
+          <div className="flex items-start gap-3">
+            <Clock className="h-5 w-5 text-muted-foreground mt-0.5" />
+            <div>
+              <p className="font-medium text-foreground">Cátedra</p>
+              <p className="text-sm text-muted-foreground">Martes y Jueves, 10:00 - 11:30</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
+            <div>
+              <p className="font-medium text-foreground">Sala</p>
+              <p className="text-sm text-muted-foreground">Edificio F, Sala 205</p>
             </div>
           </div>
         </div>

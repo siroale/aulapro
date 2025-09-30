@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Clock, AlertCircle, FileText } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Clock, AlertCircle, FileText, Calendar } from "lucide-react";
 import { CalendarEvent } from "@/data/coursesData";
 
 interface WeeklyDeliverablesProps {
@@ -47,7 +48,15 @@ export const WeeklyDeliverables = ({ events }: WeeklyDeliverablesProps) => {
 
   return (
     <Card className="p-6 mb-8">
-      <h2 className="text-xl font-bold text-foreground mb-4">Entregas de Esta Semana</h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-bold text-foreground">Entregas de Esta Semana</h2>
+        <Button asChild size="sm" className="gap-2">
+          <a href="/calendario">
+            <Calendar className="h-4 w-4" />
+            Ver más
+          </a>
+        </Button>
+      </div>
       <div className="space-y-3">
         {weeklyEvents.map((event) => {
           const Icon = getEventIcon(event.type);

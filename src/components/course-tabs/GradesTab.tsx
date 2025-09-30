@@ -32,7 +32,7 @@ const sampleGrades: Grade[] = [
     type: "Tarea",
     score: 85,
     maxScore: 100,
-    weight: 10,
+    weight: 8,
     status: "graded",
     date: "2025-09-20",
   },
@@ -48,33 +48,83 @@ const sampleGrades: Grade[] = [
   },
   {
     id: "3",
-    assignment: "Examen Parcial 1",
-    type: "Examen",
-    score: null,
+    assignment: "Laboratorio 1: Análisis",
+    type: "Laboratorio",
+    score: 88,
     maxScore: 100,
-    weight: 30,
-    status: "pending",
-    date: "2025-10-05",
+    weight: 7,
+    status: "graded",
+    date: "2025-09-28",
   },
   {
     id: "4",
-    assignment: "Proyecto de Análisis",
-    type: "Proyecto",
-    score: null,
-    maxScore: 100,
-    weight: 25,
-    status: "pending",
-    date: "2025-10-12",
-  },
-  {
-    id: "5",
     assignment: "Taller Práctico",
     type: "Tarea",
     score: 78,
     maxScore: 100,
-    weight: 10,
+    weight: 8,
     status: "graded",
     date: "2025-09-30",
+  },
+  {
+    id: "5",
+    assignment: "Examen Parcial 1",
+    type: "Examen",
+    score: null,
+    maxScore: 100,
+    weight: 20,
+    status: "pending",
+    date: "2025-10-05",
+  },
+  {
+    id: "6",
+    assignment: "Tarea 2: Proyecto Integrador",
+    type: "Tarea",
+    score: null,
+    maxScore: 100,
+    weight: 10,
+    status: "pending",
+    date: "2025-10-15",
+  },
+  {
+    id: "7",
+    assignment: "Quiz: Aplicaciones Prácticas",
+    type: "Evaluación",
+    score: null,
+    maxScore: 100,
+    weight: 5,
+    status: "pending",
+    date: "2025-10-18",
+  },
+  {
+    id: "8",
+    assignment: "Laboratorio 2: Optimización",
+    type: "Laboratorio",
+    score: null,
+    maxScore: 100,
+    weight: 7,
+    status: "pending",
+    date: "2025-10-22",
+  },
+  {
+    id: "9",
+    assignment: "Examen Parcial 2",
+    type: "Examen",
+    score: null,
+    maxScore: 100,
+    weight: 20,
+    status: "pending",
+    date: "2025-10-30",
+  },
+  {
+    id: "10",
+    assignment: "Proyecto Final",
+    type: "Proyecto",
+    score: null,
+    maxScore: 100,
+    weight: 10,
+    status: "pending",
+    date: "2025-11-10",
   },
 ];
 
@@ -87,7 +137,8 @@ export const GradesTab = ({ courseId }: GradesTabProps) => {
       0
     );
 
-    return totalWeight > 0 ? (weightedSum / totalWeight) * 100 : 0;
+    // Return score out of 100 (not percentage)
+    return totalWeight > 0 ? weightedSum / totalWeight : 0;
   };
 
   const currentGrade = calculateCurrentGrade();
@@ -128,16 +179,7 @@ export const GradesTab = ({ courseId }: GradesTabProps) => {
             <p className="text-sm text-muted-foreground">Basada en trabajos calificados</p>
           </div>
           <div className="text-right">
-            <div className="text-4xl font-bold text-primary">{currentGrade.toFixed(1)}%</div>
-            <p className="text-sm text-muted-foreground mt-1">
-              {currentGrade >= 90
-                ? "Excelente"
-                : currentGrade >= 80
-                ? "Muy Bien"
-                : currentGrade >= 70
-                ? "Bien"
-                : "Necesita Mejorar"}
-            </p>
+            <div className="text-4xl font-bold text-primary">{currentGrade.toFixed(1)}/100</div>
           </div>
         </div>
       </Card>

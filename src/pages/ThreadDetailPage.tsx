@@ -21,6 +21,7 @@ const ThreadDetailPage = () => {
   const [replyVotes, setReplyVotes] = useState<Record<string, number>>(
     thread?.replies.reduce((acc, reply) => ({ ...acc, [reply.id]: reply.votes }), {}) || {}
   );
+  const [userVotes, setUserVotes] = useState<Record<string, "up" | "down" | null>>({});
   const [replies, setReplies] = useState<ForumReply[]>(thread?.replies || []);
   const [replyContent, setReplyContent] = useState("");
   const [nestedReplyContent, setNestedReplyContent] = useState<Record<string, string>>({});
@@ -38,15 +39,43 @@ const ThreadDetailPage = () => {
   }
 
   const handleVote = (id: string, voteType: "up" | "down", isReply: boolean = false) => {
+    const currentVote = userVotes[id];
+    
+    // If clicking the same vote, remove it (toggle)
+    if (currentVote === voteType) {
+      setUserVotes({ ...userVotes, [id]: null });
+      if (isReply) {
+        setReplyVotes((prev) => ({
+          ...prev,
+          [id]: (prev[id] || 0) - (voteType === "up" ? 1 : -1),
+        }));
+      } else {
+        setVotes((prev) => ({
+          ...prev,
+          [id]: (prev[id] || 0) - (voteType === "up" ? 1 : -1),
+        }));
+      }
+      return;
+    }
+    
+    // Calculate the vote change
+    let voteChange = voteType === "up" ? 1 : -1;
+    if (currentVote) {
+      // Remove previous vote and add new vote
+      voteChange += currentVote === "up" ? -1 : 1;
+    }
+    
+    setUserVotes({ ...userVotes, [id]: voteType });
+    
     if (isReply) {
       setReplyVotes((prev) => ({
         ...prev,
-        [id]: (prev[id] || 0) + (voteType === "up" ? 1 : -1),
+        [id]: (prev[id] || 0) + voteChange,
       }));
     } else {
       setVotes((prev) => ({
         ...prev,
-        [id]: (prev[id] || 0) + (voteType === "up" ? 1 : -1),
+        [id]: (prev[id] || 0) + voteChange,
       }));
     }
   };
@@ -120,7 +149,7 @@ const ThreadDetailPage = () => {
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                   <Button
-                    variant="ghost"
+                    variant={userVotes[reply.id] === "up" ? "default" : "ghost"}
                     size="sm"
                     onClick={() => handleVote(reply.id, "up", true)}
                   >
@@ -128,7 +157,7 @@ const ThreadDetailPage = () => {
                   </Button>
                   <span className="text-sm font-medium">{replyVotes[reply.id] || reply.votes}</span>
                   <Button
-                    variant="ghost"
+                    variant={userVotes[reply.id] === "down" ? "default" : "ghost"}
                     size="sm"
                     onClick={() => handleVote(reply.id, "down", true)}
                   >
@@ -218,7 +247,7 @@ const ThreadDetailPage = () => {
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                   <Button
-                    variant="ghost"
+                    variant={userVotes[thread.id] === "up" ? "default" : "ghost"}
                     size="sm"
                     onClick={() => handleVote(thread.id, "up")}
                   >
@@ -226,7 +255,7 @@ const ThreadDetailPage = () => {
                   </Button>
                   <span className="text-sm font-medium">{votes[thread.id] || thread.votes}</span>
                   <Button
-                    variant="ghost"
+                    variant={userVotes[thread.id] === "down" ? "default" : "ghost"}
                     size="sm"
                     onClick={() => handleVote(thread.id, "down")}
                   >
