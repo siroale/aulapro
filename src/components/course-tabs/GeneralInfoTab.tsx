@@ -1,9 +1,8 @@
+import { Course, calendarEvents } from "@/data/coursesData";
 import { Card } from "@/components/ui/card";
-import { Course } from "@/data/coursesData";
-import { User, Calendar, BookOpen, Clock, Download, AlertCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { calendarEvents } from "@/data/coursesData";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Download, Calendar, AlertCircle } from "lucide-react";
 
 interface GeneralInfoTabProps {
   course: Course;
@@ -114,65 +113,88 @@ export const GeneralInfoTab = ({ course }: GeneralInfoTabProps) => {
         </Card>
       )}
 
-      {/* Course Description */}
+      {/* Course Information */}
       <Card className="p-6">
-        <h3 className="text-xl font-semibold text-foreground mb-4">Descripción del Curso</h3>
-        <p className="text-muted-foreground leading-relaxed mb-6">{course.description}</p>
-
-        {/* Downloadable Resources */}
-        <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t">
-          <Button
-            variant="outline"
-            className="flex items-center gap-2"
-            onClick={() => handleDownload("syllabus.pdf")}
-          >
-            <Download className="h-4 w-4" />
-            Descargar Programa
-          </Button>
-          <Button
-            variant="outline"
-            className="flex items-center gap-2"
-            onClick={() => handleDownload("planning.pdf")}
-          >
-            <Download className="h-4 w-4" />
-            Descargar Planificación
-          </Button>
+        <h2 className="text-xl font-semibold text-foreground mb-4">
+          Información del Curso
+        </h2>
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-sm font-medium text-muted-foreground mb-1">
+              Código
+            </h3>
+            <p className="text-foreground">{course.code}</p>
+          </div>
+          <div>
+            <h3 className="text-sm font-medium text-muted-foreground mb-1">
+              Paralelo
+            </h3>
+            <p className="text-foreground">200</p>
+          </div>
+          <div>
+            <h3 className="text-sm font-medium text-muted-foreground mb-1">
+              Nombre
+            </h3>
+            <p className="text-foreground">{course.name}</p>
+          </div>
+          <div>
+            <h3 className="text-sm font-medium text-muted-foreground mb-1">
+              Departamento
+            </h3>
+            <Badge>{course.department}</Badge>
+          </div>
+          <div>
+            <h3 className="text-sm font-medium text-muted-foreground mb-1">
+              Profesor(a)
+            </h3>
+            <p className="text-foreground">{course.instructor}</p>
+            <p className="text-sm text-muted-foreground">maria.gonzalez@usm.cl</p>
+          </div>
+          <div>
+            <h3 className="text-sm font-medium text-muted-foreground mb-1">
+              Ayudantes
+            </h3>
+            <div className="space-y-2">
+              <div>
+                <p className="text-sm text-foreground">Javier Morales</p>
+                <p className="text-xs text-muted-foreground">javier.morales@usm.cl</p>
+              </div>
+              <div>
+                <p className="text-sm text-foreground">Carolina Fuentes</p>
+                <p className="text-xs text-muted-foreground">carolina.fuentes@usm.cl</p>
+              </div>
+              <div>
+                <p className="text-sm text-foreground">Diego Valenzuela</p>
+                <p className="text-xs text-muted-foreground">diego.valenzuela@usm.cl</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 className="text-sm font-medium text-muted-foreground mb-1">
+              Descripción
+            </h3>
+            <p className="text-foreground mb-4">{course.description}</p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Button 
+                variant="outline" 
+                className="gap-2" 
+                onClick={() => window.open("/mockup.pdf", "_blank")}
+              >
+                <Download className="h-4 w-4" />
+                Descargar Programa
+              </Button>
+              <Button 
+                variant="outline" 
+                className="gap-2" 
+                onClick={() => window.open("/mockup.pdf", "_blank")}
+              >
+                <Download className="h-4 w-4" />
+                Descargar Planificación
+              </Button>
+            </div>
+          </div>
         </div>
       </Card>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="p-6">
-          <div className="flex items-center gap-3 mb-2">
-            <User className="h-5 w-5 text-primary" />
-            <h3 className="font-semibold text-foreground">Instructor</h3>
-          </div>
-          <p className="text-muted-foreground">{course.instructor}</p>
-        </Card>
-
-        <Card className="p-6">
-          <div className="flex items-center gap-3 mb-2">
-            <BookOpen className="h-5 w-5 text-primary" />
-            <h3 className="font-semibold text-foreground">Departamento</h3>
-          </div>
-          <p className="text-muted-foreground">{course.department}</p>
-        </Card>
-
-        <Card className="p-6">
-          <div className="flex items-center gap-3 mb-2">
-            <Calendar className="h-5 w-5 text-primary" />
-            <h3 className="font-semibold text-foreground">Horario</h3>
-          </div>
-          <p className="text-muted-foreground">Lunes y Miércoles, 10:00 - 12:00</p>
-        </Card>
-
-        <Card className="p-6">
-          <div className="flex items-center gap-3 mb-2">
-            <Clock className="h-5 w-5 text-primary" />
-            <h3 className="font-semibold text-foreground">Créditos</h3>
-          </div>
-          <p className="text-muted-foreground">4 créditos</p>
-        </Card>
-      </div>
     </div>
   );
 };

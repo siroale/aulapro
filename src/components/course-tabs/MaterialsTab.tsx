@@ -5,7 +5,7 @@ import { FileText, Video, HelpCircle, CheckSquare, Download, LayoutGrid, List, C
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { PdfViewerModal } from "@/components/PdfViewerModal";
+
 
 interface MaterialsTabProps {
   course: Course;
@@ -13,7 +13,6 @@ interface MaterialsTabProps {
 
 export const MaterialsTab = ({ course }: MaterialsTabProps) => {
   const [viewMode, setViewMode] = useState<"default" | "minimal">("default");
-  const [selectedPdf, setSelectedPdf] = useState<string | null>(null);
   const [expandedModules, setExpandedModules] = useState<string[]>(
     course.modules.map((m) => m.id)
   );
@@ -58,7 +57,13 @@ export const MaterialsTab = ({ course }: MaterialsTabProps) => {
   };
 
   const handleMaterialClick = () => {
-    setSelectedPdf("/mockup.pdf");
+    // Open PDF in new tab
+    // IMPORTANT: Place mockup.pdf in the public folder for local testing
+    // For production, replace with actual file path or Google Drive link
+    window.open("/mockup.pdf", "_blank");
+    
+    // Alternative: Open Google Drive link (replace SAMPLE_ID with actual file ID)
+    // window.open("https://drive.google.com/file/d/SAMPLE_ID/view", "_blank");
   };
 
   return (
@@ -95,9 +100,9 @@ export const MaterialsTab = ({ course }: MaterialsTabProps) => {
           {course.modules.map((module) => (
             <AccordionItem key={module.id} value={module.id} className="border-none">
               <Card className="overflow-hidden">
-                <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-muted/50">
+                <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-muted/50 [&[data-state=open]>div>svg]:rotate-90">
                   <div className="flex items-center gap-3 text-left w-full">
-                    <ChevronDown className="h-5 w-5 text-primary shrink-0" />
+                    <ChevronDown className="h-5 w-5 text-primary shrink-0 transition-transform" />
                     <h3 className="text-lg font-semibold text-foreground">{module.title}</h3>
                     <div className="flex items-center gap-2 ml-auto">
                       {hasNewContent(module.id) && (
@@ -161,48 +166,52 @@ export const MaterialsTab = ({ course }: MaterialsTabProps) => {
         <Card className="p-6">
           <div className="space-y-4">
             {course.modules.map((module) => (
-              <div key={module.id} className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <ChevronDown className="h-4 w-4" />
-                  <span className="font-medium text-sm">{module.title}</span>
-                  {hasNewContent(module.id) && (
-                    <span className="h-1.5 w-1.5 bg-destructive rounded-full" />
-                  )}
-                </div>
-                <div className="ml-6 space-y-1">
-                  {module.units.map((unit) => (
-                    <div key={unit.id} className="space-y-1">
-                      <div className="text-xs text-muted-foreground">{unit.title}</div>
-                      <div className="ml-4 space-y-0.5">
-                        {unit.lessons.map((lesson) => {
-                          const Icon = getIcon(lesson.type);
-                          return (
-                            <div
-                              key={lesson.id}
-                              className="flex items-center gap-2 text-sm hover:text-primary cursor-pointer py-1"
-                              onClick={handleMaterialClick}
-                            >
-                              <Icon className="h-3 w-3" />
-                              <span>{lesson.title}</span>
-                            </div>
-                          );
-                        })}
-                      </div>
+              <Accordion
+                key={module.id}
+                type="multiple"
+                defaultValue={[module.id]}
+                className="space-y-2"
+              >
+                <AccordionItem value={module.id} className="border-none">
+                  <AccordionTrigger className="py-2 hover:no-underline [&[data-state=open]>div>svg]:rotate-90">
+                    <div className="flex items-center gap-2">
+                      <ChevronDown className="h-4 w-4 transition-transform" />
+                      <span className="font-medium text-sm">{module.title}</span>
+                      {hasNewContent(module.id) && (
+                        <span className="h-1.5 w-1.5 bg-destructive rounded-full" />
+                      )}
                     </div>
-                  ))}
-                </div>
-              </div>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="ml-6 space-y-1">
+                      {module.units.map((unit) => (
+                        <div key={unit.id} className="space-y-1">
+                          <div className="text-xs text-muted-foreground">{unit.title}</div>
+                          <div className="ml-4 space-y-0.5">
+                            {unit.lessons.map((lesson) => {
+                              const Icon = getIcon(lesson.type);
+                              return (
+                                <div
+                                  key={lesson.id}
+                                  className="flex items-center gap-2 text-sm hover:text-primary cursor-pointer py-1"
+                                  onClick={handleMaterialClick}
+                                >
+                                  <Icon className="h-3 w-3" />
+                                  <span>{lesson.title}</span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             ))}
           </div>
         </Card>
       )}
-
-      {/* PDF Viewer Modal */}
-      <PdfViewerModal
-        isOpen={selectedPdf !== null}
-        onClose={() => setSelectedPdf(null)}
-        pdfUrl={selectedPdf || ""}
-      />
     </div>
   );
 };

@@ -38,6 +38,16 @@ export interface CalendarEvent {
   description: string;
 }
 
+export interface ForumReply {
+  id: string;
+  author: string;
+  avatar: string;
+  content: string;
+  timestamp: string;
+  votes: number;
+  parentReplyId?: string; // For nested replies
+}
+
 export interface ForumThread {
   id: string;
   courseId: string;
@@ -45,9 +55,12 @@ export interface ForumThread {
   avatar: string;
   title: string;
   preview: string;
-  replies: number;
+  content: string;
+  tags: string[];
+  replies: ForumReply[];
   lastActivity: string;
   views: number;
+  votes: number;
 }
 
 export const courses: Course[] = [
@@ -58,7 +71,7 @@ export const courses: Course[] = [
     department: "DEFIDER",
     image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80",
     description: "Curso introductorio sobre los principios fundamentales de la ingeniería.",
-    instructor: "Dr. María González",
+    instructor: "Dra. María González",
     modules: [
       {
         id: "m1",
@@ -280,9 +293,30 @@ export const forumThreads: ForumThread[] = [
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Juan",
     title: "Dudas sobre el primer examen parcial",
     preview: "Hola a todos, tengo algunas dudas sobre los temas que entran en el primer parcial...",
-    replies: 8,
+    content: "Hola a todos, tengo algunas dudas sobre los temas que entran en el primer parcial. ¿Alguien sabe si entran los temas de la unidad 2 completa o solo hasta el módulo 2.1? También me gustaría saber si hay algún formato específico que debamos seguir para las respuestas de desarrollo.",
+    tags: ["Certamen", "Duda"],
+    replies: [
+      {
+        id: "r1",
+        author: "Profesor",
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Prof",
+        content: "El examen cubre hasta el módulo 2.1 inclusive. Las respuestas de desarrollo deben ser claras y concisas.",
+        timestamp: "Hace 1 hora",
+        votes: 12,
+      },
+      {
+        id: "r2",
+        author: "Ana Torres",
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Ana",
+        content: "Gracias por la aclaración, profesor!",
+        timestamp: "Hace 45 minutos",
+        votes: 3,
+        parentReplyId: "r1",
+      },
+    ],
     lastActivity: "Hace 2 horas",
     views: 45,
+    votes: 8,
   },
   {
     id: "t2",
@@ -291,9 +325,21 @@ export const forumThreads: ForumThread[] = [
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Maria",
     title: "Recursos adicionales para el módulo 1.2",
     preview: "¿Alguien tiene recursos adicionales sobre el método científico? Me gustaría profundizar más...",
-    replies: 5,
+    content: "¿Alguien tiene recursos adicionales sobre el método científico? Me gustaría profundizar más en el tema ya que me parece muy interesante y creo que será importante para mi carrera. Agradezco cualquier libro, video o artículo que puedan recomendar.",
+    tags: ["Materia", "Consulta"],
+    replies: [
+      {
+        id: "r3",
+        author: "Carlos Méndez",
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=CarlosM",
+        content: "Te recomiendo el libro 'The Scientific Method' de John Smith. Es excelente!",
+        timestamp: "Hace 4 horas",
+        votes: 5,
+      },
+    ],
     lastActivity: "Hace 5 horas",
     views: 32,
+    votes: 5,
   },
   {
     id: "t3",
@@ -302,9 +348,29 @@ export const forumThreads: ForumThread[] = [
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Pedro",
     title: "Grupo de estudio para la tarea 1",
     preview: "Estoy buscando formar un grupo de estudio para trabajar en la tarea 1. ¿Alguien se anima?",
-    replies: 12,
+    content: "Estoy buscando formar un grupo de estudio para trabajar en la tarea 1. ¿Alguien se anima? Podemos reunirnos los fines de semana en la biblioteca o hacer videoconferencias si prefieren. La idea es compartir ideas y ayudarnos mutuamente.",
+    tags: ["Tarea", "Consulta"],
+    replies: [
+      {
+        id: "r4",
+        author: "Sofia Ramírez",
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sofia",
+        content: "Me interesa! Yo prefiero reuniones presenciales.",
+        timestamp: "Hace 20 horas",
+        votes: 4,
+      },
+      {
+        id: "r5",
+        author: "Diego Castro",
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Diego",
+        content: "Yo también me uno! Cuenten conmigo.",
+        timestamp: "Hace 18 horas",
+        votes: 3,
+      },
+    ],
     lastActivity: "Hace 1 día",
     views: 67,
+    votes: 12,
   },
   {
     id: "t4",
@@ -313,9 +379,21 @@ export const forumThreads: ForumThread[] = [
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Laura",
     title: "Consulta sobre el video de la clase 3",
     preview: "No me queda claro el concepto que se explica en el minuto 15:30 del video...",
-    replies: 3,
+    content: "No me queda claro el concepto que se explica en el minuto 15:30 del video de la clase 3. ¿Alguien me podría explicar con otras palabras? Me está costando entender la diferencia entre los dos enfoques.",
+    tags: ["Materia", "Duda"],
+    replies: [
+      {
+        id: "r6",
+        author: "Profesor",
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Prof",
+        content: "La diferencia principal está en el enfoque metodológico. El primero es deductivo y el segundo inductivo.",
+        timestamp: "Hace 2 días",
+        votes: 8,
+      },
+    ],
     lastActivity: "Hace 3 días",
     views: 28,
+    votes: 3,
   },
   {
     id: "t5",
@@ -324,8 +402,28 @@ export const forumThreads: ForumThread[] = [
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Carlos",
     title: "Compartiendo apuntes de la Unidad 1",
     preview: "Hola, comparto mis apuntes de la primera unidad por si le sirven a alguien...",
-    replies: 15,
+    content: "Hola, comparto mis apuntes de la primera unidad por si le sirven a alguien. Están bastante completos y tienen algunos ejemplos adicionales que encontré. Espero que les sean útiles para el estudio!",
+    tags: ["Materia"],
+    replies: [
+      {
+        id: "r7",
+        author: "Valentina Ortiz",
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Vale",
+        content: "Muchas gracias! Me van a servir muchísimo.",
+        timestamp: "Hace 6 días",
+        votes: 6,
+      },
+      {
+        id: "r8",
+        author: "Roberto Silva",
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Roberto",
+        content: "Excelentes apuntes, muy bien organizados!",
+        timestamp: "Hace 5 días",
+        votes: 4,
+      },
+    ],
     lastActivity: "Hace 1 semana",
     views: 89,
+    votes: 15,
   },
 ];
