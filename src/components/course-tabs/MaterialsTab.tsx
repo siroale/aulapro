@@ -60,7 +60,7 @@ export const MaterialsTab = ({ course }: MaterialsTabProps) => {
     // Open PDF in new tab
     // IMPORTANT: Place mockup.pdf in the public folder for local testing
     // For production, replace with actual file path or Google Drive link
-    window.open("/mockup.pdf", "_blank");
+    window.open("/verano_invencible.pdf", "_blank");
     
     // Alternative: Open Google Drive link (replace SAMPLE_ID with actual file ID)
     // window.open("https://drive.google.com/file/d/SAMPLE_ID/view", "_blank");
