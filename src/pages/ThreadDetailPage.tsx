@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import { forumThreads } from "@/data/coursesData";
 import { Card } from "@/components/ui/card";
@@ -13,7 +13,9 @@ import type { ForumReply } from "@/data/coursesData";
 const ThreadDetailPage = () => {
   const { courseId, threadId } = useParams();
   const navigate = useNavigate();
-  const thread = forumThreads.find((t) => t.id === threadId && t.courseId === courseId);
+  const location = useLocation();
+  const passedThread = (location.state as any)?.thread;
+  const thread = passedThread || forumThreads.find((t) => t.id === threadId && t.courseId === courseId);
 
   const [votes, setVotes] = useState<Record<string, number>>(
     thread ? { [thread.id]: thread.votes } : {}
@@ -216,7 +218,7 @@ const ThreadDetailPage = () => {
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Button
           variant="ghost"
-          onClick={() => navigate(`/curso/${courseId}`)}
+          onClick={() => navigate(`/curso/${courseId}?tab=forum`)}
           className="mb-6"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />

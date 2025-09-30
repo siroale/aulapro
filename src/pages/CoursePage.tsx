@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import { GeneralInfoTab } from "@/components/course-tabs/GeneralInfoTab";
 import { MaterialsTab } from "@/components/course-tabs/MaterialsTab";
@@ -23,6 +23,9 @@ const CoursePage = () => {
   }
 
   const courseForumThreads = forumThreads.filter((thread) => thread.courseId === courseId);
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const initialTab = params.get("tab") ?? "general";
 
   return (
     <div className="min-h-screen bg-background">
@@ -39,7 +42,7 @@ const CoursePage = () => {
           </div>
 
           {/* Tabbed Content */}
-          <Tabs defaultValue="general" className="w-full">
+          <Tabs defaultValue={initialTab} className="w-full">
             <TabsList className="grid w-full grid-cols-4 mb-8">
               <TabsTrigger value="general">Información General</TabsTrigger>
               <TabsTrigger value="materials">Materiales</TabsTrigger>

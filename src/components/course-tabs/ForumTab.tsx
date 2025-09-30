@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+// Dialog removed - inline create post form implemented
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -21,7 +21,8 @@ export const ForumTab = ({ courseId, threads }: ForumTabProps) => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [threadList, setThreadList] = useState<ForumThread[]>(threads);
+  const [isCreating, setIsCreating] = useState(false);
   const [newPostTitle, setNewPostTitle] = useState("");
   const [newPostContent, setNewPostContent] = useState("");
   const [newPostTags, setNewPostTags] = useState<string[]>([]);
@@ -40,7 +41,7 @@ export const ForumTab = ({ courseId, threads }: ForumTabProps) => {
     return colors[tag] || "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
   };
 
-  const filteredThreads = threads.filter((thread) => {
+  const filteredThreads = threadList.filter((thread) => {
     const matchesSearch =
       thread.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       thread.preview.toLowerCase().includes(searchQuery.toLowerCase());
@@ -54,14 +55,29 @@ export const ForumTab = ({ courseId, threads }: ForumTabProps) => {
 
   const handleCreatePost = () => {
     if (!newPostTitle.trim() || !newPostContent.trim()) return;
-    
-    // In a real app, this would send data to backend
-    console.log("New post:", { title: newPostTitle, content: newPostContent, tags: newPostTags });
-    
-    setIsCreateModalOpen(false);
+
+    const newThread: ForumThread = {
+      id: `t${Date.now()}`,
+      courseId,
+      author: "Usuario Actual",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Current",
+      title: newPostTitle.trim(),
+      preview: newPostContent.trim().slice(0, 140),
+      content: newPostContent.trim(),
+      tags: newPostTags.length ? newPostTags : ["Duda"],
+      replies: [],
+      lastActivity: "Justo ahora",
+      views: 0,
+      votes: 0,
+    };
+
+    setThreadList([newThread, ...threadList]);
+
+    // Reset and collapse
     setNewPostTitle("");
     setNewPostContent("");
     setNewPostTags([]);
+    setIsCreating(false);
   };
 
   const toggleTagFilter = (tag: string) => {
@@ -76,8 +92,8 @@ export const ForumTab = ({ courseId, threads }: ForumTabProps) => {
     );
   };
 
-  const handleThreadClick = (threadId: string) => {
-    navigate(`/curso/${courseId}/foro/${threadId}`);
+  const handleThreadClick = (thread: ForumThread) => {
+    navigate(`/curso/${courseId}/foro/${thread.id}`, { state: { thread } });
   };
 
   return (
@@ -93,67 +109,68 @@ export const ForumTab = ({ courseId, threads }: ForumTabProps) => {
             className="pl-10"
           />
         </div>
-        <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              Nueva Publicación
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[600px]">
-            <DialogHeader>
-              <DialogTitle>Crear Nueva Publicación</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="title">Título</Label>
-                <Input
-                  id="title"
-                  placeholder="Título de tu publicación"
-                  value={newPostTitle}
-                  onChange={(e) => setNewPostTitle(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="content">Contenido</Label>
-                <Textarea
-                  id="content"
-                  placeholder="Escribe tu publicación..."
-                  value={newPostContent}
-                  onChange={(e) => setNewPostContent(e.target.value)}
-                  rows={6}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Etiquetas</Label>
-                <div className="flex flex-wrap gap-3">
-                  {availableTags.map((tag) => (
-                    <div key={tag} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={`new-${tag}`}
-                        checked={newPostTags.includes(tag)}
-                        onCheckedChange={() => toggleNewPostTag(tag)}
-                      />
-                      <Label
-                        htmlFor={`new-${tag}`}
-                        className="text-sm cursor-pointer"
-                      >
-                        {tag}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
+        <Button onClick={() => setIsCreating((v) => !v)}>
+          <Plus className="h-4 w-4 mr-2" />
+          {isCreating ? "Cancelar" : "Nueva Publicación"}
+        </Button>
+      </div>
+
+      {isCreating && (
+        <Card className="p-4">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="title">Título</Label>
+              <Input
+                id="title"
+                placeholder="Título de tu publicación"
+                value={newPostTitle}
+                onChange={(e) => setNewPostTitle(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="content">Contenido</Label>
+              <Textarea
+                id="content"
+                placeholder="Escribe tu publicación..."
+                value={newPostContent}
+                onChange={(e) => setNewPostContent(e.target.value)}
+                rows={6}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Etiquetas</Label>
+              <div className="flex flex-wrap gap-3">
+                {availableTags.map((tag) => (
+                  <div key={tag} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`new-${tag}`}
+                      checked={newPostTags.includes(tag)}
+                      onCheckedChange={() => toggleNewPostTag(tag)}
+                    />
+                    <Label htmlFor={`new-${tag}`} className="text-sm cursor-pointer">
+                      {tag}
+                    </Label>
+                  </div>
+                ))}
               </div>
             </div>
             <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setIsCreateModalOpen(false)}>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIsCreating(false);
+                  setNewPostTitle("");
+                  setNewPostContent("");
+                  setNewPostTags([]);
+                }}
+              >
                 Cancelar
               </Button>
               <Button onClick={handleCreatePost}>Publicar</Button>
             </div>
-          </DialogContent>
-        </Dialog>
-      </div>
+          </div>
+        </Card>
+      )}
 
       {/* Tag Filters */}
       <div className="flex flex-wrap gap-2">
@@ -188,7 +205,7 @@ export const ForumTab = ({ courseId, threads }: ForumTabProps) => {
           <Card
             key={thread.id}
             className="p-6 hover:shadow-lg transition-shadow cursor-pointer"
-            onClick={() => handleThreadClick(thread.id)}
+            onClick={() => handleThreadClick(thread)}
           >
             <div className="flex items-start gap-4">
               <Avatar className="h-10 w-10">
