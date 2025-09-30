@@ -1,4 +1,4 @@
-import { Search, Bell, Menu, User, BookOpen, Home } from "lucide-react";
+import { Search, Bell, Menu, User, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -17,21 +17,18 @@ export const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo and main navigation */}
           <div className="flex items-center gap-6">
-            <div className="flex items-center gap-2">
-              <BookOpen className="h-8 w-8 text-primary" />
-              <span className="text-xl font-bold text-primary hidden sm:block">MiUniversidad</span>
-            </div>
+            <Button variant="ghost" size="icon" asChild className="h-10 w-10">
+              <a href="/">
+                <BookOpen className="h-8 w-8 text-primary" />
+              </a>
+            </Button>
             
             <div className="hidden md:flex items-center gap-4">
-              <Button variant="ghost" size="sm" className="gap-2">
-                <Home className="h-4 w-4" />
-                Página Principal
+              <Button variant="ghost" size="sm" asChild>
+                <a href="/">Página Principal</a>
               </Button>
-              <Button variant="ghost" size="sm">
-                Área personal
-              </Button>
-              <Button variant="ghost" size="sm">
-                Mis cursos
+              <Button variant="ghost" size="sm" asChild>
+                <a href="/calendario">Calendario</a>
               </Button>
             </div>
           </div>

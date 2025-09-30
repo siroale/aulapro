@@ -1,17 +1,12 @@
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import { CourseCard } from "@/components/CourseCard";
-import { Calendar } from "@/components/Calendar";
-import { CourseDetailModal } from "@/components/CourseDetailModal";
-import { courses, calendarEvents, forumThreads } from "@/data/coursesData";
-import { Course } from "@/data/coursesData";
+import { AnnouncementsBanner } from "@/components/AnnouncementsBanner";
+import { WeeklyDeliverables } from "@/components/WeeklyDeliverables";
+import { courses, calendarEvents } from "@/data/coursesData";
 
 const Index = () => {
-  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
-
-  const getCourseForumThreads = (courseId: string) => {
-    return forumThreads.filter(thread => thread.courseId === courseId);
-  };
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-background">
@@ -24,11 +19,11 @@ const Index = () => {
           <p className="text-muted-foreground">Aquí está tu resumen académico</p>
         </div>
 
-        {/* Calendar Section - Made Prominent */}
-        <section className="mb-12">
-          <h2 className="text-2xl font-bold text-foreground mb-6">Calendario y Próximas Entregas</h2>
-          <Calendar events={calendarEvents} />
-        </section>
+        {/* Announcements Banner */}
+        <AnnouncementsBanner />
+
+        {/* Weekly Deliverables */}
+        <WeeklyDeliverables events={calendarEvents} />
 
         {/* Courses Section */}
         <section>
@@ -38,22 +33,12 @@ const Index = () => {
               <CourseCard
                 key={course.id}
                 course={course}
-                onClick={() => setSelectedCourse(course)}
+                onClick={() => navigate(`/curso/${course.id}`)}
               />
             ))}
           </div>
         </section>
       </main>
-
-      {/* Course Detail Modal */}
-      {selectedCourse && (
-        <CourseDetailModal
-          course={selectedCourse}
-          forumThreads={getCourseForumThreads(selectedCourse.id)}
-          isOpen={!!selectedCourse}
-          onClose={() => setSelectedCourse(null)}
-        />
-      )}
     </div>
   );
 };
