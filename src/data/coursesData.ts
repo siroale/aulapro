@@ -54,7 +54,7 @@ export const courses: Course[] = [
   {
     id: "1",
     code: "DEF-101",
-    name: "Fundamentos de Ingeniería",
+    name: "Fundamentos de Brainrot",
     department: "DEFIDER",
     image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80",
     description: "Curso introductorio sobre los principios fundamentales de la ingeniería.",
