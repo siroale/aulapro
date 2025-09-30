@@ -13,9 +13,11 @@ interface MaterialsTabProps {
 
 export const MaterialsTab = ({ course }: MaterialsTabProps) => {
   const [viewMode, setViewMode] = useState<"default" | "minimal">("default");
+  // Units expanded by default, modules collapsed by default
   const [expandedModules, setExpandedModules] = useState<string[]>(
     course.modules.map((m) => m.id)
   );
+  const [expandedUnits, setExpandedUnits] = useState<string[]>([]);
 
   const getIcon = (type: string) => {
     switch (type) {
@@ -56,14 +58,28 @@ export const MaterialsTab = ({ course }: MaterialsTabProps) => {
     return moduleId === "mod1"; // Only first module has new content for demo
   };
 
-  const handleMaterialClick = () => {
-    // Open PDF in new tab
+  const handleMaterialClick = (type: string, courseId: string, lessonId: string) => {
+    // If it's an assignment, navigate to assignment detail page
+    if (type === "assignment") {
+      window.location.href = `/curso/${courseId}/tarea/${lessonId}`;
+      return;
+    }
+    
+    // Otherwise, open PDF in new tab
     // IMPORTANT: Place mockup.pdf in the public folder for local testing
     // For production, replace with actual file path or Google Drive link
     window.open("https://drive.google.com/file/d/1TAU46-xzQg3QiTcOaj50xAh1pBUAWX7Y/view?usp=sharing", "_blank");
     
     // Alternative: Open Google Drive link (replace SAMPLE_ID with actual file ID)
     // window.open("https://drive.google.com/file/d/SAMPLE_ID/view", "_blank");
+  };
+
+  const toggleUnit = (unitId: string) => {
+    setExpandedUnits(prev =>
+      prev.includes(unitId)
+        ? prev.filter(id => id !== unitId)
+        : [...prev, unitId]
+    );
   };
 
   return (
@@ -113,46 +129,61 @@ export const MaterialsTab = ({ course }: MaterialsTabProps) => {
                   </div>
                 </AccordionTrigger>
                 <AccordionContent>
-                  <div className="px-6 pb-4 space-y-4">
-                    {module.units.map((unit) => (
-                      <div key={unit.id}>
-                        <h4 className="text-sm font-medium text-muted-foreground mb-2 flex items-center gap-2">
-                          {unit.title}
-                          <Badge variant="outline" className="text-xs">
-                            {unit.lessons.length}
-                          </Badge>
-                        </h4>
-                        <div className="space-y-2 ml-4">
-                          {unit.lessons.map((lesson) => {
-                            const Icon = getIcon(lesson.type);
-                            return (
-                              <div
-                                key={lesson.id}
-                                className="flex items-center justify-between p-3 rounded-lg border border-border hover:bg-muted/50 transition-colors cursor-pointer"
-                                onClick={handleMaterialClick}
-                              >
-                                <div className="flex items-center gap-3">
-                                  <Icon className="h-5 w-5 text-primary" />
-                                  <div>
-                                    <p className="text-sm font-medium text-foreground">
-                                      {lesson.title}
-                                    </p>
-                                    <p className="text-xs text-muted-foreground">
-                                      {getTypeLabel(lesson.type)}
-                                    </p>
+                  <div className="px-6 pb-4 space-y-3">
+                    {module.units.map((unit) => {
+                      const isUnitExpanded = expandedUnits.includes(unit.id);
+                      return (
+                        <div key={unit.id} className="border rounded-lg overflow-hidden">
+                          <div
+                            className="flex items-center gap-2 p-3 bg-muted/30 hover:bg-muted/50 cursor-pointer"
+                            onClick={() => toggleUnit(unit.id)}
+                          >
+                            <ChevronDown
+                              className={`h-4 w-4 text-primary shrink-0 transition-transform ${
+                                isUnitExpanded ? "rotate-0" : "-rotate-90"
+                              }`}
+                            />
+                            <h4 className="text-sm font-medium text-foreground flex-1">
+                              {unit.title}
+                            </h4>
+                            <Badge variant="outline" className="text-xs">
+                              {unit.lessons.length}
+                            </Badge>
+                          </div>
+                          {isUnitExpanded && (
+                            <div className="space-y-2 p-3 bg-card">
+                              {unit.lessons.map((lesson) => {
+                                const Icon = getIcon(lesson.type);
+                                return (
+                                  <div
+                                    key={lesson.id}
+                                    className="flex items-center justify-between p-3 rounded-lg border border-border hover:bg-muted/50 transition-colors cursor-pointer"
+                                    onClick={() => handleMaterialClick(lesson.type, course.id, lesson.id)}
+                                  >
+                                    <div className="flex items-center gap-3">
+                                      <Icon className="h-5 w-5 text-primary" />
+                                      <div>
+                                        <p className="text-sm font-medium text-foreground">
+                                          {lesson.title}
+                                        </p>
+                                        <p className="text-xs text-muted-foreground">
+                                          {getTypeLabel(lesson.type)}
+                                        </p>
+                                      </div>
+                                    </div>
+                                    {lesson.type === "pdf" && (
+                                      <Button variant="ghost" size="sm">
+                                        <Download className="h-4 w-4" />
+                                      </Button>
+                                    )}
                                   </div>
-                                </div>
-                                {lesson.type === "pdf" && (
-                                  <Button variant="ghost" size="sm">
-                                    <Download className="h-4 w-4" />
-                                  </Button>
-                                )}
-                              </div>
-                            );
-                          })}
+                                );
+                              })}
+                            </div>
+                          )}
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </AccordionContent>
               </Card>
@@ -169,7 +200,14 @@ export const MaterialsTab = ({ course }: MaterialsTabProps) => {
               <Accordion
                 key={module.id}
                 type="multiple"
-                defaultValue={[module.id]}
+                value={expandedModules.includes(module.id) ? [module.id] : []}
+                onValueChange={(values) => {
+                  if (values.includes(module.id)) {
+                    setExpandedModules(prev => [...prev, module.id]);
+                  } else {
+                    setExpandedModules(prev => prev.filter(id => id !== module.id));
+                  }
+                }}
                 className="space-y-2"
               >
                 <AccordionItem value={module.id} className="border-none">
@@ -183,27 +221,42 @@ export const MaterialsTab = ({ course }: MaterialsTabProps) => {
                     </div>
                   </AccordionTrigger>
                   <AccordionContent>
-                    <div className="ml-6 space-y-1">
-                      {module.units.map((unit) => (
-                        <div key={unit.id} className="space-y-1">
-                          <div className="text-xs text-muted-foreground">{unit.title}</div>
-                          <div className="ml-4 space-y-0.5">
-                            {unit.lessons.map((lesson) => {
-                              const Icon = getIcon(lesson.type);
-                              return (
-                                <div
-                                  key={lesson.id}
-                                  className="flex items-center gap-2 text-sm hover:text-primary cursor-pointer py-1"
-                                  onClick={handleMaterialClick}
-                                >
-                                  <Icon className="h-3 w-3" />
-                                  <span>{lesson.title}</span>
-                                </div>
-                              );
-                            })}
+                    <div className="ml-6 space-y-2">
+                      {module.units.map((unit) => {
+                        const isUnitExpanded = expandedUnits.includes(unit.id);
+                        return (
+                          <div key={unit.id} className="space-y-1">
+                            <div 
+                              className="flex items-center gap-2 text-xs font-medium cursor-pointer hover:text-primary"
+                              onClick={() => toggleUnit(unit.id)}
+                            >
+                              <ChevronDown
+                                className={`h-3 w-3 transition-transform ${
+                                  isUnitExpanded ? "rotate-0" : "-rotate-90"
+                                }`}
+                              />
+                              {unit.title}
+                            </div>
+                            {isUnitExpanded && (
+                              <div className="ml-5 space-y-0.5">
+                                {unit.lessons.map((lesson) => {
+                                  const Icon = getIcon(lesson.type);
+                                  return (
+                                    <div
+                                      key={lesson.id}
+                                      className="flex items-center gap-2 text-sm hover:text-primary cursor-pointer py-1"
+                                      onClick={() => handleMaterialClick(lesson.type, course.id, lesson.id)}
+                                    >
+                                      <Icon className="h-3 w-3" />
+                                      <span>{lesson.title}</span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </AccordionContent>
                 </AccordionItem>

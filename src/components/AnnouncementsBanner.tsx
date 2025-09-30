@@ -14,7 +14,7 @@ const announcements: Announcement[] = [
   {
     id: "1",
     title: "Cambio de horario - IND-305",
-    description: "El examen parcial de Control de Calidad se reprograma para el 27 de octubre.",
+    description: "El certamen de Control de Calidad se reprograma para el 27 de octubre.",
     date: "2025-10-02",
     type: "urgent",
   },

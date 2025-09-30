@@ -68,8 +68,8 @@ const sampleGrades: Grade[] = [
   },
   {
     id: "5",
-    assignment: "Examen Parcial 1",
-    type: "Examen",
+    assignment: "Certamen 1",
+    type: "Certamen",
     score: null,
     maxScore: 100,
     weight: 20,
@@ -108,8 +108,8 @@ const sampleGrades: Grade[] = [
   },
   {
     id: "9",
-    assignment: "Examen Parcial 2",
-    type: "Examen",
+    assignment: "Certamen 2",
+    type: "Certamen",
     score: null,
     maxScore: 100,
     weight: 20,
@@ -131,17 +131,21 @@ const sampleGrades: Grade[] = [
 export const GradesTab = ({ courseId }: GradesTabProps) => {
   const calculateCurrentGrade = () => {
     const gradedAssignments = sampleGrades.filter((g) => g.status === "graded");
-    const totalWeight = gradedAssignments.reduce((sum, g) => sum + g.weight, 0);
+    // Calculate weighted sum: sum of (score/100 × weight) for all graded items
     const weightedSum = gradedAssignments.reduce(
-      (sum, g) => sum + (g.score! / g.maxScore) * g.weight,
+      (sum, g) => sum + (g.score! / g.maxScore) * 100 * (g.weight / 100),
       0
     );
 
-    // Return score out of 100 (not percentage)
-    return totalWeight > 0 ? weightedSum / totalWeight : 0;
+    // Return weighted score out of 100
+    return weightedSum;
   };
 
   const currentGrade = calculateCurrentGrade();
+  
+  const completedWeight = sampleGrades
+    .filter((g) => g.status === "graded")
+    .reduce((sum, g) => sum + g.weight, 0);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -175,11 +179,14 @@ export const GradesTab = ({ courseId }: GradesTabProps) => {
       <Card className="p-6">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-lg font-semibold text-foreground mb-1">Calificación Actual</h3>
-            <p className="text-sm text-muted-foreground">Basada en trabajos calificados</p>
+            <h3 className="text-lg font-semibold text-foreground mb-1">Nota Actual</h3>
+            <p className="text-sm text-muted-foreground">
+              Ponderación completada: {completedWeight}%
+            </p>
           </div>
           <div className="text-right">
-            <div className="text-4xl font-bold text-primary">{currentGrade.toFixed(1)}/100</div>
+            <div className="text-4xl font-bold text-primary">{currentGrade.toFixed(1)}</div>
+            <p className="text-xs text-muted-foreground mt-1">de 100</p>
           </div>
         </div>
       </Card>
@@ -193,7 +200,7 @@ export const GradesTab = ({ courseId }: GradesTabProps) => {
               <TableHead>Evaluación</TableHead>
               <TableHead>Tipo</TableHead>
               <TableHead className="text-center">Calificación</TableHead>
-              <TableHead className="text-center">Peso</TableHead>
+              <TableHead className="text-center">Ponderación</TableHead>
               <TableHead className="text-center">Estado</TableHead>
               <TableHead>Fecha</TableHead>
             </TableRow>

@@ -1,4 +1,5 @@
-import { Bell, Menu, User, BookOpen } from "lucide-react";
+import { Bell, Menu, User } from "lucide-react";
+import logoUsm from "@/assets/logo-usm.png";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -17,11 +18,14 @@ export const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo and main navigation */}
           <div className="flex items-center gap-6">
-            <Button variant="ghost" size="icon" asChild className="h-10 w-10">
-              <a href="/">
-                <BookOpen className="h-8 w-8 text-primary" />
-              </a>
-            </Button>
+            {/* University Logo - Replace logo-usm.png in src/assets folder with your logo */}
+            <a href="/" className="flex items-center">
+              <img 
+                src={logoUsm} 
+                alt="Universidad Técnica Federico Santa María" 
+                className="h-12 w-auto object-contain"
+              />
+            </a>
             
             <div className="hidden md:flex items-center gap-4">
               <Button variant="ghost" size="sm" asChild>
