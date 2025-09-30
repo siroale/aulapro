@@ -1,4 +1,5 @@
 import { useParams, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import { Navbar } from "@/components/Navbar";
 import { GeneralInfoTab } from "@/components/course-tabs/GeneralInfoTab";
 import { MaterialsTab } from "@/components/course-tabs/MaterialsTab";
@@ -10,6 +11,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 const CoursePage = () => {
   const { courseId } = useParams();
   const course = courses.find((c) => c.id === courseId);
+
+  // Scroll to top when entering course page
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [courseId]);
 
   if (!course) {
     return (
