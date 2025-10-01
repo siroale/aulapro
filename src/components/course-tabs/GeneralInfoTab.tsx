@@ -118,8 +118,8 @@ export const GeneralInfoTab = ({ course }: GeneralInfoTabProps) => {
           <p className="text-foreground font-medium">{course.instructor}</p>
           <div className="flex items-center gap-2 text-muted-foreground">
             <Mail className="h-4 w-4" />
-            <a href="mailto:maria.gonzalez@usm.cl" className="hover:text-primary transition-colors">
-              maria.gonzalez@usm.cl
+            <a href="mailto:roberto.leon@usm.cl" className="hover:text-primary transition-colors">
+              profesor.inteligente@usm.cl
             </a>
           </div>
         </div>
