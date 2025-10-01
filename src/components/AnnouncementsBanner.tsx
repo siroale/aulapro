@@ -14,7 +14,7 @@ const announcements: Announcement[] = [
   {
     id: "1",
     title: "Cambio de horario - INF-285",
-    description: "El certamen de Computación Científica se reprograma para el 4 de octubre.",
+    description: "El certamen de Computación Científica se reprograma para el 5 de octubre.",
     date: "2025-10-02",
     type: "urgent",
   },
