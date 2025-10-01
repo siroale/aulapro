@@ -11,8 +11,11 @@ interface MaterialsTabProps {
   course: Course;
 }
 
+type SectionType = "catedra" | "laboratorio" | "ayudantia";
+
 export const MaterialsTab = ({ course }: MaterialsTabProps) => {
   const [viewMode, setViewMode] = useState<"default" | "minimal">("default");
+  const [activeSection, setActiveSection] = useState<SectionType>("catedra");
   // Units expanded by default, modules collapsed by default
   const [expandedModules, setExpandedModules] = useState<string[]>(
     course.modules.map((m) => m.id)
@@ -94,32 +97,95 @@ export const MaterialsTab = ({ course }: MaterialsTabProps) => {
     );
   };
 
-  return (
-    <div className="space-y-6">
-      {/* View Toggle - Segmented Control */}
-      <div className="flex justify-start">
-        <div className="inline-flex rounded-lg border-2 border-border bg-muted/30 p-1">
-          <Button
-            variant={viewMode === "default" ? "default" : "ghost"}
-            size="sm"
-            onClick={() => setViewMode("default")}
-            className="gap-2"
-          >
-            <LayoutGrid className="h-4 w-4" />
-            Vista Completa
-          </Button>
-          <Button
-            variant={viewMode === "minimal" ? "default" : "ghost"}
-            size="sm"
-            onClick={() => setViewMode("minimal")}
-            className="gap-2"
-          >
-            <List className="h-4 w-4" />
-            Vista Mínima
-          </Button>
-        </div>
-      </div>
+  // Laboratorio content
+  const laboratorioContent = [
+    { id: "lab-reg", title: "Reglamento", type: "pdf" },
+    { id: "lab1", title: "Laboratorio 1", type: "assignment", dueDate: "2025-10-12" },
+    { id: "lab2", title: "Laboratorio 2", type: "assignment", dueDate: "2025-10-19" },
+    { id: "lab3", title: "Laboratorio 3", type: "assignment", dueDate: "2025-10-26" },
+    { id: "lab4", title: "Laboratorio 4", type: "assignment", dueDate: "2025-11-02" },
+    { id: "lab5", title: "Laboratorio 5", type: "assignment", dueDate: "2025-11-09" },
+    { id: "lab6", title: "Laboratorio 6", type: "assignment", dueDate: "2025-11-16" },
+  ];
 
+  // Ayudantía content
+  const ayudantiaContent = [
+    {
+      id: "ay1",
+      title: "Ayudantía 1",
+      items: [
+        { id: "ay1-1", title: "Ejercicios Resueltos.pdf", type: "pdf" },
+        { id: "ay1-2", title: "Pauta Ayudantía.pdf", type: "pdf" },
+        { id: "ay1-3", title: "Material Complementario.pdf", type: "pdf" },
+      ],
+    },
+    {
+      id: "ay2",
+      title: "Ayudantía 2",
+      items: [
+        { id: "ay2-1", title: "Ejercicios Resueltos.pdf", type: "pdf" },
+        { id: "ay2-2", title: "Pauta Ayudantía.pdf", type: "pdf" },
+        { id: "ay2-3", title: "Material Complementario.pdf", type: "pdf" },
+      ],
+    },
+    {
+      id: "ay3",
+      title: "Ayudantía 3",
+      items: [
+        { id: "ay3-1", title: "Ejercicios Resueltos.pdf", type: "pdf" },
+        { id: "ay3-2", title: "Pauta Ayudantía.pdf", type: "pdf" },
+        { id: "ay3-3", title: "Material Complementario.pdf", type: "pdf" },
+      ],
+    },
+    {
+      id: "ay4",
+      title: "Ayudantía 4",
+      items: [
+        { id: "ay4-1", title: "Ejercicios Resueltos.pdf", type: "pdf" },
+        { id: "ay4-2", title: "Pauta Ayudantía.pdf", type: "pdf" },
+        { id: "ay4-3", title: "Material Complementario.pdf", type: "pdf" },
+      ],
+    },
+    {
+      id: "ay5",
+      title: "Ayudantía 5",
+      items: [
+        { id: "ay5-1", title: "Ejercicios Resueltos.pdf", type: "pdf" },
+        { id: "ay5-2", title: "Pauta Ayudantía.pdf", type: "pdf" },
+        { id: "ay5-3", title: "Material Complementario.pdf", type: "pdf" },
+      ],
+    },
+    {
+      id: "ay6",
+      title: "Ayudantía 6",
+      items: [
+        { id: "ay6-1", title: "Ejercicios Resueltos.pdf", type: "pdf" },
+        { id: "ay6-2", title: "Pauta Ayudantía.pdf", type: "pdf" },
+        { id: "ay6-3", title: "Material Complementario.pdf", type: "pdf" },
+      ],
+    },
+    {
+      id: "ay7",
+      title: "Ayudantía 7",
+      items: [
+        { id: "ay7-1", title: "Ejercicios Resueltos.pdf", type: "pdf" },
+        { id: "ay7-2", title: "Pauta Ayudantía.pdf", type: "pdf" },
+        { id: "ay7-3", title: "Material Complementario.pdf", type: "pdf" },
+      ],
+    },
+    {
+      id: "ay8",
+      title: "Ayudantía 8",
+      items: [
+        { id: "ay8-1", title: "Ejercicios Resueltos.pdf", type: "pdf" },
+        { id: "ay8-2", title: "Pauta Ayudantía.pdf", type: "pdf" },
+        { id: "ay8-3", title: "Material Complementario.pdf", type: "pdf" },
+      ],
+    },
+  ];
+
+  const renderCatedraContent = () => (
+    <>
       {/* Default View */}
       {viewMode === "default" && (
         <Accordion
@@ -280,6 +346,134 @@ export const MaterialsTab = ({ course }: MaterialsTabProps) => {
           </div>
         </Card>
       )}
+    </>
+  );
+
+  const renderLaboratorioContent = () => (
+    <Card className="p-6">
+      <div className="space-y-3">
+        {laboratorioContent.map((item) => {
+          const Icon = getIcon(item.type);
+          return (
+            <div
+              key={item.id}
+              className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-muted/50 transition-colors cursor-pointer"
+              onClick={() => handleMaterialClick(item.type, course.id, item.id)}
+            >
+              <div className="flex items-center gap-3">
+                <Icon className={`h-5 w-5 ${getIconColor(item.type)}`} />
+                <div>
+                  <p className="text-sm font-medium text-foreground">{item.title}</p>
+                  {item.dueDate && (
+                    <p className="text-xs text-muted-foreground">
+                      Entrega: {new Date(item.dueDate).toLocaleDateString("es-ES", {
+                        day: "numeric",
+                        month: "long",
+                      })}
+                    </p>
+                  )}
+                </div>
+              </div>
+              {item.type === "pdf" && (
+                <Button variant="ghost" size="sm">
+                  <Download className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </Card>
+  );
+
+  const renderAyudantiaContent = () => (
+    <div className="space-y-4">
+      {ayudantiaContent.map((session) => (
+        <Card key={session.id} className="overflow-hidden">
+          <div className="px-6 py-4 bg-muted/30">
+            <h3 className="text-base font-semibold text-foreground">{session.title}</h3>
+          </div>
+          <div className="p-4 space-y-2">
+            {session.items.map((item) => {
+              const Icon = getIcon(item.type);
+              return (
+                <div
+                  key={item.id}
+                  className="flex items-center justify-between p-3 rounded-lg border border-border hover:bg-muted/50 transition-colors cursor-pointer"
+                  onClick={() => handleMaterialClick(item.type, course.id, item.id)}
+                >
+                  <div className="flex items-center gap-3">
+                    <Icon className={`h-5 w-5 ${getIconColor(item.type)}`} />
+                    <p className="text-sm font-medium text-foreground">{item.title}</p>
+                  </div>
+                  <Button variant="ghost" size="sm">
+                    <Download className="h-4 w-4" />
+                  </Button>
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+      ))}
+    </div>
+  );
+
+  return (
+    <div className="space-y-6">
+      {/* View Toggle and Section Navigation */}
+      <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
+        {/* View Toggle - Segmented Control */}
+        <div className="inline-flex rounded-lg border-2 border-border bg-muted/30 p-1">
+          <Button
+            variant={viewMode === "default" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setViewMode("default")}
+            className="gap-2"
+          >
+            <LayoutGrid className="h-4 w-4" />
+            Vista Completa
+          </Button>
+          <Button
+            variant={viewMode === "minimal" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setViewMode("minimal")}
+            className="gap-2"
+          >
+            <List className="h-4 w-4" />
+            Vista Mínima
+          </Button>
+        </div>
+
+        {/* Section Navigation */}
+        <div className="inline-flex rounded-lg border-2 border-border bg-muted/30 p-1">
+          <Button
+            variant={activeSection === "catedra" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setActiveSection("catedra")}
+          >
+            Cátedra
+          </Button>
+          <Button
+            variant={activeSection === "laboratorio" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setActiveSection("laboratorio")}
+          >
+            Laboratorio
+          </Button>
+          <Button
+            variant={activeSection === "ayudantia" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setActiveSection("ayudantia")}
+          >
+            Ayudantía
+          </Button>
+        </div>
+      </div>
+
+      {/* Content based on active section */}
+      {activeSection === "catedra" && renderCatedraContent()}
+      {activeSection === "laboratorio" && renderLaboratorioContent()}
+      {activeSection === "ayudantia" && renderAyudantiaContent()}
     </div>
   );
 };

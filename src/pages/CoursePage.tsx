@@ -51,7 +51,7 @@ const CoursePage = () => {
           <Tabs defaultValue={initialTab} className="w-full">
             <TabsList className="grid w-full grid-cols-4 mb-8">
               <TabsTrigger value="general">Información General</TabsTrigger>
-              <TabsTrigger value="materials">Materiales</TabsTrigger>
+              <TabsTrigger value="materials">Contenidos y Evaluaciones</TabsTrigger>
               <TabsTrigger value="forum">Foro</TabsTrigger>
               <TabsTrigger value="grades">Calificaciones</TabsTrigger>
             </TabsList>

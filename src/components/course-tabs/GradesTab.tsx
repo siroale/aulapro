@@ -175,22 +175,6 @@ export const GradesTab = ({ courseId }: GradesTabProps) => {
 
   return (
     <div className="space-y-6">
-      {/* Overall Grade */}
-      <Card className="p-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-lg font-semibold text-foreground mb-1">Nota Actual</h3>
-            <p className="text-sm text-muted-foreground">
-              Ponderación completada: {completedWeight}%
-            </p>
-          </div>
-          <div className="text-right">
-            <div className="text-4xl font-bold text-primary">{currentGrade.toFixed(1)}</div>
-            <p className="text-xs text-muted-foreground mt-1">de 100</p>
-          </div>
-        </div>
-      </Card>
-
       {/* Grades Table */}
       <Card className="p-6">
         <h3 className="text-lg font-semibold text-foreground mb-4">Detalle de Calificaciones</h3>
@@ -238,28 +222,11 @@ export const GradesTab = ({ courseId }: GradesTabProps) => {
         </Table>
       </Card>
 
-      {/* Summary */}
+      {/* Overall Grade */}
       <Card className="p-6">
-        <h3 className="text-lg font-semibold text-foreground mb-4">Resumen</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="text-center p-4 rounded-lg bg-green-50 dark:bg-green-950/20">
-            <p className="text-2xl font-bold text-green-700 dark:text-green-400">
-              {sampleGrades.filter((g) => g.status === "graded").length}
-            </p>
-            <p className="text-sm text-muted-foreground">Calificados</p>
-          </div>
-          <div className="text-center p-4 rounded-lg bg-yellow-50 dark:bg-yellow-950/20">
-            <p className="text-2xl font-bold text-yellow-700 dark:text-yellow-400">
-              {sampleGrades.filter((g) => g.status === "pending").length}
-            </p>
-            <p className="text-sm text-muted-foreground">Pendientes</p>
-          </div>
-          <div className="text-center p-4 rounded-lg bg-blue-50 dark:bg-blue-950/20">
-            <p className="text-2xl font-bold text-blue-700 dark:text-blue-400">
-              {sampleGrades.reduce((sum, g) => sum + g.weight, 0)}%
-            </p>
-            <p className="text-sm text-muted-foreground">Peso Total</p>
-          </div>
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold text-foreground">Nota Actual</h3>
+          <div className="text-4xl font-bold text-primary">{currentGrade.toFixed(1)}</div>
         </div>
       </Card>
     </div>

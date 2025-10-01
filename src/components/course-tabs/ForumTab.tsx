@@ -27,7 +27,7 @@ export const ForumTab = ({ courseId, threads }: ForumTabProps) => {
   const [newPostContent, setNewPostContent] = useState("");
   const [newPostTags, setNewPostTags] = useState<string[]>([]);
 
-  const availableTags = ["Certamen", "Tarea", "Laboratorio", "Materia", "Consulta", "Duda"];
+  const availableTags = ["Certamen", "Tarea", "Laboratorio", "Materia", "Petición", "Duda"];
 
   const getTagColor = (tag: string) => {
     const colors: Record<string, string> = {
@@ -35,7 +35,7 @@ export const ForumTab = ({ courseId, threads }: ForumTabProps) => {
       Tarea: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200",
       Laboratorio: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
       Materia: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
-      Consulta: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
+      Petición: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
       Duda: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
     };
     return colors[tag] || "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
