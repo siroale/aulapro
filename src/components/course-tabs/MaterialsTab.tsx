@@ -21,6 +21,7 @@ export const MaterialsTab = ({ course }: MaterialsTabProps) => {
     course.modules.map((m) => m.id)
   );
   const [expandedUnits, setExpandedUnits] = useState<string[]>([]);
+  const [expandedAyudantias, setExpandedAyudantias] = useState<string[]>([]);
 
   const getIcon = (type: string) => {
     switch (type) {
@@ -350,79 +351,212 @@ export const MaterialsTab = ({ course }: MaterialsTabProps) => {
   );
 
   const renderLaboratorioContent = () => (
-    <Card className="p-6">
-      <div className="space-y-3">
-        {laboratorioContent.map((item) => {
-          const Icon = getIcon(item.type);
-          return (
-            <div
-              key={item.id}
-              className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-muted/50 transition-colors cursor-pointer"
-              onClick={() => handleMaterialClick(item.type, course.id, item.id)}
-            >
-              <div className="flex items-center gap-3">
-                <Icon className={`h-5 w-5 ${getIconColor(item.type)}`} />
-                <div>
-                  <p className="text-sm font-medium text-foreground">{item.title}</p>
-                  {item.dueDate && (
-                    <p className="text-xs text-muted-foreground">
-                      Entrega: {new Date(item.dueDate).toLocaleDateString("es-ES", {
-                        day: "numeric",
-                        month: "long",
-                      })}
-                    </p>
-                  )}
-                </div>
-              </div>
-              {item.type === "pdf" && (
-                <Button variant="ghost" size="sm">
-                  <Download className="h-4 w-4" />
-                </Button>
-              )}
-            </div>
-          );
-        })}
-      </div>
-    </Card>
-  );
-
-  const renderAyudantiaContent = () => (
-    <div className="space-y-4">
-      {ayudantiaContent.map((session) => (
-        <Card key={session.id} className="overflow-hidden">
-          <div className="px-6 py-4 bg-muted/30">
-            <h3 className="text-base font-semibold text-foreground">{session.title}</h3>
-          </div>
-          <div className="p-4 space-y-2">
-            {session.items.map((item) => {
+    <>
+      {/* Default View */}
+      {viewMode === "default" && (
+        <Card className="p-6">
+          <div className="space-y-3">
+            {laboratorioContent.map((item) => {
               const Icon = getIcon(item.type);
               return (
                 <div
                   key={item.id}
-                  className="flex items-center justify-between p-3 rounded-lg border border-border hover:bg-muted/50 transition-colors cursor-pointer"
+                  className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-muted/50 transition-colors cursor-pointer"
                   onClick={() => handleMaterialClick(item.type, course.id, item.id)}
                 >
                   <div className="flex items-center gap-3">
                     <Icon className={`h-5 w-5 ${getIconColor(item.type)}`} />
-                    <p className="text-sm font-medium text-foreground">{item.title}</p>
+                    <div>
+                      <p className="text-sm font-medium text-foreground">{item.title}</p>
+                      {item.dueDate && (
+                        <p className="text-xs text-muted-foreground">
+                          Entrega: {new Date(item.dueDate).toLocaleDateString("es-ES", {
+                            day: "numeric",
+                            month: "long",
+                          })}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                  <Button variant="ghost" size="sm">
-                    <Download className="h-4 w-4" />
-                  </Button>
+                  {item.type === "pdf" && (
+                    <Button variant="ghost" size="sm">
+                      <Download className="h-4 w-4" />
+                    </Button>
+                  )}
                 </div>
               );
             })}
           </div>
         </Card>
-      ))}
-    </div>
+      )}
+
+      {/* Minimal View */}
+      {viewMode === "minimal" && (
+        <Card className="p-6">
+          <div className="space-y-2">
+            {laboratorioContent.map((item) => {
+              const Icon = getIcon(item.type);
+              return (
+                <div
+                  key={item.id}
+                  className="flex items-center gap-2 text-sm hover:text-primary cursor-pointer py-1"
+                  onClick={() => handleMaterialClick(item.type, course.id, item.id)}
+                >
+                  <Icon className={`h-3 w-3 ${getIconColor(item.type)}`} />
+                  <span className="flex-1">{item.title}</span>
+                  {item.dueDate && (
+                    <span className="text-xs text-muted-foreground">
+                      {new Date(item.dueDate).toLocaleDateString("es-ES", {
+                        day: "numeric",
+                        month: "short",
+                      })}
+                    </span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+      )}
+    </>
+  );
+
+  const toggleAyudantia = (ayudantiaId: string) => {
+    setExpandedAyudantias(prev =>
+      prev.includes(ayudantiaId)
+        ? prev.filter(id => id !== ayudantiaId)
+        : [...prev, ayudantiaId]
+    );
+  };
+
+  const renderAyudantiaContent = () => (
+    <>
+      {/* Default View */}
+      {viewMode === "default" && (
+        <div className="space-y-4">
+          {ayudantiaContent.map((session) => {
+            const isExpanded = expandedAyudantias.includes(session.id);
+            return (
+              <Card key={session.id} className="overflow-hidden">
+                <div
+                  className="flex items-center gap-3 px-6 py-4 bg-muted/30 cursor-pointer hover:bg-muted/50 transition-colors"
+                  onClick={() => toggleAyudantia(session.id)}
+                >
+                  {isExpanded ? (
+                    <ChevronDown className="h-5 w-5 text-primary shrink-0 transition-transform" />
+                  ) : (
+                    <ChevronRight className="h-5 w-5 text-primary shrink-0 transition-transform" />
+                  )}
+                  <h3 className="text-base font-semibold text-foreground flex-1">{session.title}</h3>
+                  <Badge variant="secondary">{session.items.length}</Badge>
+                </div>
+                {isExpanded && (
+                  <div className="p-4 space-y-2">
+                    {session.items.map((item) => {
+                      const Icon = getIcon(item.type);
+                      return (
+                        <div
+                          key={item.id}
+                          className="flex items-center justify-between p-3 rounded-lg border border-border hover:bg-muted/50 transition-colors cursor-pointer"
+                          onClick={() => handleMaterialClick(item.type, course.id, item.id)}
+                        >
+                          <div className="flex items-center gap-3">
+                            <Icon className={`h-5 w-5 ${getIconColor(item.type)}`} />
+                            <p className="text-sm font-medium text-foreground">{item.title}</p>
+                          </div>
+                          <Button variant="ghost" size="sm">
+                            <Download className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </Card>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Minimal View */}
+      {viewMode === "minimal" && (
+        <Card className="p-6">
+          <div className="space-y-4">
+            {ayudantiaContent.map((session) => {
+              const isExpanded = expandedAyudantias.includes(session.id);
+              return (
+                <div key={session.id} className="space-y-2">
+                  <div
+                    className="flex items-center gap-2 text-sm font-medium cursor-pointer hover:text-primary"
+                    onClick={() => toggleAyudantia(session.id)}
+                  >
+                    {isExpanded ? (
+                      <ChevronDown className="h-4 w-4 transition-transform" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4 transition-transform" />
+                    )}
+                    {session.title}
+                    <span className="text-xs text-muted-foreground ml-auto">({session.items.length})</span>
+                  </div>
+                  {isExpanded && (
+                    <div className="ml-6 space-y-1">
+                      {session.items.map((item) => {
+                        const Icon = getIcon(item.type);
+                        return (
+                          <div
+                            key={item.id}
+                            className="flex items-center gap-2 text-sm hover:text-primary cursor-pointer py-1"
+                            onClick={() => handleMaterialClick(item.type, course.id, item.id)}
+                          >
+                            <Icon className={`h-3 w-3 ${getIconColor(item.type)}`} />
+                            <span>{item.title}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+      )}
+    </>
   );
 
   return (
     <div className="space-y-6">
-      {/* View Toggle and Section Navigation */}
+      {/* Section Navigation and View Toggle */}
       <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
-        {/* View Toggle - Segmented Control */}
+        {/* Section Navigation - LEFT SIDE */}
+        <div className="inline-flex rounded-lg border-2 border-border bg-muted/30 p-1">
+          <Button
+            variant={activeSection === "catedra" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setActiveSection("catedra")}
+            className="w-32"
+          >
+            Cátedra
+          </Button>
+          <Button
+            variant={activeSection === "laboratorio" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setActiveSection("laboratorio")}
+            className="w-32"
+          >
+            Laboratorio
+          </Button>
+          <Button
+            variant={activeSection === "ayudantia" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setActiveSection("ayudantia")}
+            className="w-32"
+          >
+            Ayudantía
+          </Button>
+        </div>
+
+        {/* View Toggle - RIGHT SIDE */}
         <div className="inline-flex rounded-lg border-2 border-border bg-muted/30 p-1">
           <Button
             variant={viewMode === "default" ? "default" : "ghost"}
@@ -441,31 +575,6 @@ export const MaterialsTab = ({ course }: MaterialsTabProps) => {
           >
             <List className="h-4 w-4" />
             Vista Mínima
-          </Button>
-        </div>
-
-        {/* Section Navigation */}
-        <div className="inline-flex rounded-lg border-2 border-border bg-muted/30 p-1">
-          <Button
-            variant={activeSection === "catedra" ? "default" : "ghost"}
-            size="sm"
-            onClick={() => setActiveSection("catedra")}
-          >
-            Cátedra
-          </Button>
-          <Button
-            variant={activeSection === "laboratorio" ? "default" : "ghost"}
-            size="sm"
-            onClick={() => setActiveSection("laboratorio")}
-          >
-            Laboratorio
-          </Button>
-          <Button
-            variant={activeSection === "ayudantia" ? "default" : "ghost"}
-            size="sm"
-            onClick={() => setActiveSection("ayudantia")}
-          >
-            Ayudantía
           </Button>
         </div>
       </div>
