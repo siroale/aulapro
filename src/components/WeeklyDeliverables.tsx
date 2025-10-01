@@ -42,6 +42,23 @@ export const WeeklyDeliverables = ({ events }: WeeklyDeliverablesProps) => {
     }
   };
 
+  const mesesCortos = [
+    "ene", "feb", "mar", "abr", "may", "jun",
+    "jul", "ago", "sep", "oct", "nov", "dic"
+  ];
+
+  const diasCortos = [
+    "dom", "lun", "mar", "mié", "jue", "vie", "sáb"
+  ];
+
+  // Recibe YYYY-MM-DD y devuelve algo tipo "vie, 3 oct"
+  export function formatFechaLarga(fechaStr: string): string {
+    const [año, mes, dia] = fechaStr.split("-").map((x) => parseInt(x, 10));
+    const fecha = new Date(año, mes - 1, dia); 
+    const diaSemana = diasCortos[fecha.getDay()];
+    return `${diaSemana}, ${dia} ${mesesCortos[mes - 1]}`;
+  }
+  
   if (weeklyEvents.length === 0) {
     return null;
   }
@@ -75,11 +92,7 @@ export const WeeklyDeliverables = ({ events }: WeeklyDeliverablesProps) => {
                 </div>
               </div>
               <span className="text-sm text-muted-foreground">
-                {new Date(event.date).toLocaleDateString("es-ES", {
-                  weekday: "short",
-                  day: "numeric",
-                  month: "short",
-                })}
+                {formatFechaLarga(event.date)}
               </span>
             </div>
           );
