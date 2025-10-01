@@ -800,7 +800,7 @@ export const forumThreads: ForumThread[] = [
   },
   {
     id: "t6",
-    courseId: "2",
+    courseId: "3",
     author: "Juan Pérez",
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Juan",
     title: "Dudas sobre el primer certamen",
@@ -832,7 +832,7 @@ export const forumThreads: ForumThread[] = [
   },
   {
     id: "t7",
-    courseId: "2",
+    courseId: "3",
     author: "María López",
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Maria",
     title: "Recursos adicionales para el módulo 1.2",
