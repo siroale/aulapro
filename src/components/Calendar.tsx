@@ -173,7 +173,7 @@ export const Calendar = ({ events }: CalendarProps) => {
                       <p className="text-xs text-muted-foreground">
                         {new Date(event.date).toLocaleDateString('es-ES', { 
                           month: 'short', 
-                          day: 'numeric' 
+                          day: 'numeric' + 1
                         })}
                       </p>
                       <span className="text-xs font-medium text-primary">
