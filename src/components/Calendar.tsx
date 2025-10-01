@@ -149,7 +149,7 @@ export const Calendar = ({ events }: CalendarProps) => {
 
       {/* Upcoming Deadlines */}
       <Card className="p-6">
-        <h3 className="text-xl font-bold text-foreground mb-4">Próximas Entregas</h3>
+        <h3 className="text-xl font-bold text-foreground mb-4">Próximas Evaluaciones</h3>
         <div className="space-y-3">
           {upcomingEvents.map(event => {
             const Icon = getEventIcon(event.type);
@@ -164,7 +164,7 @@ export const Calendar = ({ events }: CalendarProps) => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <Badge variant="outline" className="mb-1 text-xs">
-                      {event.courseName}
+                      {event.courseRealName}
                     </Badge>
                     <p className="text-sm font-medium text-foreground truncate">
                       {event.title}
