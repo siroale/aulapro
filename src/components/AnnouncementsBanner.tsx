@@ -13,8 +13,8 @@ interface Announcement {
 const announcements: Announcement[] = [
   {
     id: "1",
-    title: "Cambio de horario - IND-305",
-    description: "El certamen de Control de Calidad se reprograma para el 27 de octubre.",
+    title: "Cambio de horario - INF-285",
+    description: "El certamen de Computación Científica se reprograma para el 27 de octubre.",
     date: "2025-10-02",
     type: "urgent",
   },
