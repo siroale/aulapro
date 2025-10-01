@@ -10,8 +10,8 @@ interface WeeklyDeliverablesProps {
 
 export const WeeklyDeliverables = ({ events }: WeeklyDeliverablesProps) => {
   // Filter events for current week (Oct 3-9, 2025 for demo)
-  const weekStart = new Date(2025, 9, 3);
-  const weekEnd = new Date(2025, 9, 9);
+  const weekStart = new Date(2025, 9, 4);
+  const weekEnd = new Date(2025, 9, 10);
   
   const weeklyEvents = events
     .filter((event) => {
