@@ -78,6 +78,16 @@ export const Calendar = ({ events }: CalendarProps) => {
     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
   ];
 
+  const mesesCortos = [
+  "ene", "feb", "mar", "abr", "may", "jun",
+  "jul", "ago", "sep", "oct", "nov", "dic"
+];
+
+  const formatFecha = (fechaStr: string) => {
+    const [año, mes, dia] = fechaStr.split("-");
+    return `${parseInt(dia, 10)} ${mesesCortos[parseInt(mes, 10) - 1]}`;
+  };
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Calendar */}
@@ -171,10 +181,7 @@ export const Calendar = ({ events }: CalendarProps) => {
                     </p>
                     <div className="flex items-center gap-2 mt-1">
                       <p className="text-xs text-muted-foreground">
-                        {new Date(event.date).toLocaleDateString('es-ES', { 
-                          month: 'short', 
-                          day: 'numeric' + 1
-                        })}
+                        {formatFecha(event.date)}
                       </p>
                       <span className="text-xs font-medium text-primary">
                         {getDaysUntil(event.date)}
