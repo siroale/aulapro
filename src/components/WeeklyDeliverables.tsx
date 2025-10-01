@@ -52,7 +52,7 @@ export const WeeklyDeliverables = ({ events }: WeeklyDeliverablesProps) => {
   ];
 
   // Recibe YYYY-MM-DD y devuelve algo tipo "vie, 3 oct"
-  export function formatFechaLarga(fechaStr: string): string {
+  function formatFechaLarga(fechaStr: string): string {
     const [año, mes, dia] = fechaStr.split("-").map((x) => parseInt(x, 10));
     const fecha = new Date(año, mes - 1, dia); 
     const diaSemana = diasCortos[fecha.getDay()];
