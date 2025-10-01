@@ -49,7 +49,7 @@ export const WeeklyDeliverables = ({ events }: WeeklyDeliverablesProps) => {
   return (
     <Card className="p-6 mb-8">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold text-foreground">Entregas de Esta Semana</h2>
+        <h2 className="text-xl font-bold text-foreground">Evaluaciones de esta Semana</h2>
         <Button asChild size="sm" className="gap-2">
           <a href="/calendario">
             <Calendar className="h-4 w-4" />
