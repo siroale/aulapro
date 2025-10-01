@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Course } from "@/data/coursesData";
-import { FileText, Video, HelpCircle, CheckSquare, Download, LayoutGrid, List, ChevronDown } from "lucide-react";
+import { FileText, Video, HelpCircle, CheckSquare, Download, LayoutGrid, List, ChevronDown, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -31,6 +31,18 @@ export const MaterialsTab = ({ course }: MaterialsTabProps) => {
         return CheckSquare;
       default:
         return FileText;
+    }
+  };
+
+  const getIconColor = (type: string) => {
+    // Blue for quizzes and assignments (priority items)
+    // Gray for other materials
+    switch (type) {
+      case "quiz":
+      case "assignment":
+        return "text-blue-600";
+      default:
+        return "text-gray-400";
     }
   };
 
@@ -84,25 +96,28 @@ export const MaterialsTab = ({ course }: MaterialsTabProps) => {
 
   return (
     <div className="space-y-6">
-      {/* View Toggle */}
-      <div className="flex justify-end">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setViewMode(viewMode === "default" ? "minimal" : "default")}
-        >
-          {viewMode === "default" ? (
-            <>
-              <List className="h-4 w-4 mr-2" />
-              Vista Mínima
-            </>
-          ) : (
-            <>
-              <LayoutGrid className="h-4 w-4 mr-2" />
-              Vista Completa
-            </>
-          )}
-        </Button>
+      {/* View Toggle - Segmented Control */}
+      <div className="flex justify-start">
+        <div className="inline-flex rounded-lg border-2 border-border bg-muted/30 p-1">
+          <Button
+            variant={viewMode === "default" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setViewMode("default")}
+            className="gap-2"
+          >
+            <LayoutGrid className="h-4 w-4" />
+            Vista Completa
+          </Button>
+          <Button
+            variant={viewMode === "minimal" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setViewMode("minimal")}
+            className="gap-2"
+          >
+            <List className="h-4 w-4" />
+            Vista Mínima
+          </Button>
+        </div>
       </div>
 
       {/* Default View */}
@@ -118,7 +133,7 @@ export const MaterialsTab = ({ course }: MaterialsTabProps) => {
               <Card className="overflow-hidden">
                 <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-muted/50 [&[data-state=open]>div>svg]:rotate-90">
                   <div className="flex items-center gap-3 text-left w-full">
-                    <ChevronDown className="h-5 w-5 text-primary shrink-0 transition-transform" />
+                    <ChevronRight className="h-5 w-5 text-primary shrink-0 transition-transform" />
                     <h3 className="text-lg font-semibold text-foreground">{module.title}</h3>
                     <div className="flex items-center gap-2 ml-auto">
                       {hasNewContent(module.id) && (
@@ -138,17 +153,17 @@ export const MaterialsTab = ({ course }: MaterialsTabProps) => {
                             className="flex items-center gap-2 p-3 bg-muted/30 hover:bg-muted/50 cursor-pointer"
                             onClick={() => toggleUnit(unit.id)}
                           >
-                            <ChevronDown
-                              className={`h-4 w-4 text-primary shrink-0 transition-transform ${
-                                isUnitExpanded ? "rotate-0" : "-rotate-90"
-                              }`}
-                            />
+                            {isUnitExpanded ? (
+                              <ChevronDown className="h-4 w-4 text-primary shrink-0 transition-transform" />
+                            ) : (
+                              <ChevronRight className="h-4 w-4 text-primary shrink-0 transition-transform" />
+                            )}
                             <h4 className="text-sm font-medium text-foreground flex-1">
                               {unit.title}
                             </h4>
-                            <Badge variant="outline" className="text-xs">
-                              {unit.lessons.length}
-                            </Badge>
+                            <span className="text-xs text-muted-foreground">
+                              ({unit.lessons.length})
+                            </span>
                           </div>
                           {isUnitExpanded && (
                             <div className="space-y-2 p-3 bg-card">
@@ -161,7 +176,7 @@ export const MaterialsTab = ({ course }: MaterialsTabProps) => {
                                     onClick={() => handleMaterialClick(lesson.type, course.id, lesson.id)}
                                   >
                                     <div className="flex items-center gap-3">
-                                      <Icon className="h-5 w-5 text-primary" />
+                                      <Icon className={`h-5 w-5 ${getIconColor(lesson.type)}`} />
                                       <div>
                                         <p className="text-sm font-medium text-foreground">
                                           {lesson.title}
@@ -213,7 +228,7 @@ export const MaterialsTab = ({ course }: MaterialsTabProps) => {
                 <AccordionItem value={module.id} className="border-none">
                   <AccordionTrigger className="py-2 hover:no-underline [&[data-state=open]>div>svg]:rotate-90">
                     <div className="flex items-center gap-2">
-                      <ChevronDown className="h-4 w-4 transition-transform" />
+                      <ChevronRight className="h-4 w-4 transition-transform" />
                       <span className="font-medium text-sm">{module.title}</span>
                       {hasNewContent(module.id) && (
                         <span className="h-1.5 w-1.5 bg-destructive rounded-full" />
@@ -230,11 +245,11 @@ export const MaterialsTab = ({ course }: MaterialsTabProps) => {
                               className="flex items-center gap-2 text-xs font-medium cursor-pointer hover:text-primary"
                               onClick={() => toggleUnit(unit.id)}
                             >
-                              <ChevronDown
-                                className={`h-3 w-3 transition-transform ${
-                                  isUnitExpanded ? "rotate-0" : "-rotate-90"
-                                }`}
-                              />
+                              {isUnitExpanded ? (
+                                <ChevronDown className="h-3 w-3 transition-transform" />
+                              ) : (
+                                <ChevronRight className="h-3 w-3 transition-transform" />
+                              )}
                               {unit.title}
                             </div>
                             {isUnitExpanded && (
@@ -247,7 +262,7 @@ export const MaterialsTab = ({ course }: MaterialsTabProps) => {
                                       className="flex items-center gap-2 text-sm hover:text-primary cursor-pointer py-1"
                                       onClick={() => handleMaterialClick(lesson.type, course.id, lesson.id)}
                                     >
-                                      <Icon className="h-3 w-3" />
+                                      <Icon className={`h-3 w-3 ${getIconColor(lesson.type)}`} />
                                       <span>{lesson.title}</span>
                                     </div>
                                   );
