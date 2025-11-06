@@ -80,7 +80,7 @@ export const WeeklyDeliverables = ({ events }: WeeklyDeliverablesProps) => {
           return (
             <div
               key={event.id}
-              className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors"
+              className="flex items-center gap-3 p-3 rounded-lg transition-colors"
             >
               <Icon className={`h-5 w-5 ${getEventColor(event.type)}`} />
               <div className="flex-1">
