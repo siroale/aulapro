@@ -8,7 +8,7 @@ import CalendarPage from "./pages/CalendarPage";
 import CoursePage from "./pages/CoursePage";
 import ThreadDetailPage from "./pages/ThreadDetailPage";
 import AssignmentDetailPage from "./pages/AssignmentDetailPage";
-import { Perfil } from "./pages/Perfil";
+import Perfil from "./pages/Perfil";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { User, Mail, Phone, MapPin, Calendar, BookOpen, Award, Edit2, Save, X } from "lucide-react";
+import { User, Mail, Phone, Calendar, BookOpen, Edit2, Save, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,17 +8,15 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Navbar } from "@/components/Navbar";
 
-export const Perfil = () => {
+const Perfil = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [userData, setUserData] = useState({
-    nombre: "Juan Pérez González",
-    email: "juan.perez@usm.cl",
+    nombre: "Ricardo Alvear",
+    email: "ricardo.alvear@usm.cl",
     telefono: "+56 9 1234 5678",
-    carrera: "Ingeniería Civil Industrial",
-    año: "4to año",
-    fechaIngreso: "Marzo 2021",
-    numeroEstudiante: "202112345",
-    promedio: "5.8",
+    carrera: "Ingeniería Civil Informática",
+    fechaIngreso: "Marzo 2022",
+    numeroEstudiante: "202273545-7",
   });
 
   const [editedData, setEditedData] = useState(userData);
@@ -34,10 +32,10 @@ export const Perfil = () => {
   };
 
   const cursosActuales = [
-    { codigo: "IND-305", nombre: "Investigación de Operaciones", creditos: 4 },
-    { codigo: "IND-310", nombre: "Gestión de Proyectos", creditos: 3 },
-    { codigo: "DEF-101", nombre: "Optimización de Procesos", creditos: 4 },
-    { codigo: "IND-201", nombre: "Control de Calidad", creditos: 3 },
+    { codigo: "INF-285", nombre: "Computación Científica", creditos: 4, instructor: "Roberto León" },
+    { codigo: "ICN-270", nombre: "Información y Matemática Financiera", creditos: 3, instructor: "Myriam Olea" },
+    { codigo: "INF-343", nombre: "Sistemas Distribuidos", creditos: 4, instructor: "Jorge Díaz" },
+    { codigo: "INF-266", nombre: "Sistemas de Gestión", creditos: 3, instructor: "Mauricio Olivares" },
   ];
 
   return (
@@ -63,30 +61,6 @@ export const Perfil = () => {
                   <h2 className="text-xl font-semibold text-center">{userData.nombre}</h2>
                   <p className="text-sm text-muted-foreground text-center mt-1">{userData.numeroEstudiante}</p>
                   <Badge className="mt-3">{userData.carrera}</Badge>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Award className="h-5 w-5" />
-                  Estadísticas Académicas
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <p className="text-sm text-muted-foreground">Promedio General</p>
-                  <p className="text-2xl font-bold text-primary">{userData.promedio}</p>
-                </div>
-                <Separator />
-                <div>
-                  <p className="text-sm text-muted-foreground">Año Actual</p>
-                  <p className="text-lg font-semibold">{userData.año}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Fecha de Ingreso</p>
-                  <p className="text-lg font-semibold">{userData.fechaIngreso}</p>
                 </div>
               </CardContent>
             </Card>
@@ -191,17 +165,20 @@ export const Perfil = () => {
                 <CardDescription>Semestre en curso</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {cursosActuales.map((curso) => (
                     <div
                       key={curso.codigo}
-                      className="flex items-center justify-between p-3 border rounded-lg hover:bg-accent/50 transition-colors"
+                      className="flex flex-col p-4 border rounded-lg"
                     >
-                      <div>
-                        <p className="font-semibold">{curso.codigo}</p>
-                        <p className="text-sm text-muted-foreground">{curso.nombre}</p>
+                      <div className="flex items-start justify-between mb-2">
+                        <div>
+                          <p className="font-semibold text-lg">{curso.codigo}</p>
+                          <Badge variant="secondary" className="mt-1">{curso.creditos} créditos</Badge>
+                        </div>
                       </div>
-                      <Badge variant="secondary">{curso.creditos} créditos</Badge>
+                      <p className="text-sm text-muted-foreground mb-1">{curso.nombre}</p>
+                      <p className="text-xs text-muted-foreground">{curso.instructor}</p>
                     </div>
                   ))}
                 </div>
@@ -213,3 +190,5 @@ export const Perfil = () => {
     </div>
   );
 };
+
+export default Perfil;
