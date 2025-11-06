@@ -70,7 +70,7 @@ export const courses: Course[] = [
     code: "INF-285",
     name: "Computación Científica",
     department: "INFORMATICA",
-    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80",
+    image: "src/assets/realcc.png",
     description: "Curso sobre métodos numéricos y computacionales aplicados a problemas científicos.",
     instructor: "Roberto León",
     modules: [
@@ -176,7 +176,7 @@ export const courses: Course[] = [
     code: "ICN-270",
     name: "Información y Matemática Financiera",
     department: "INDUSTRIAS",
-    image: "https://images.unsplash.com/photo-1565008576549-57569a49371d?w=800&q=80",
+    image: "src/assets/imafi.jpg",
     description: "Análisis financiero y matemáticas aplicadas a la toma de decisiones empresariales.",
     instructor: "Myriam Olea",
     modules: [
@@ -269,7 +269,7 @@ export const courses: Course[] = [
     code: "INF-343",
     name: "Sistemas Distribuidos",
     department: "INFORMATICA",
-    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80",
+    image: "src/assets/dist.jpg",
     description: "Diseño, implementación y análisis de sistemas distribuidos y arquitecturas escalables.",
     instructor: "Jorge Díaz",
     modules: [
@@ -362,7 +362,7 @@ export const courses: Course[] = [
     code: "INF-266",
     name: "Sistemas de Gestión",
     department: "INFORMATICA",
-    image: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&q=80",
+    image: "src/assets/sistemasgestion.jpg",
     description: "Análisis, diseño e implementación de sistemas de información para la gestión empresarial.",
     instructor: "Mauricio Olivares",
     modules: [
