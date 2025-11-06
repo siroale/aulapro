@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Clock, AlertCircle, FileText, Folder } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -10,6 +11,7 @@ interface CalendarProps {
 }
 
 export const Calendar = ({ events }: CalendarProps) => {
+  const navigate = useNavigate();
   const [currentMonth, setCurrentMonth] = useState(new Date(2025, 9, 1)); // October 2025
 
   const getDaysInMonth = (date: Date) => {
@@ -79,19 +81,72 @@ export const Calendar = ({ events }: CalendarProps) => {
   ];
 
   const mesesCortos = [
-  "ene", "feb", "mar", "abr", "may", "jun",
-  "jul", "ago", "sep", "oct", "nov", "dic"
-];
+    "ene", "feb", "mar", "abr", "may", "jun",
+    "jul", "ago", "sep", "oct", "nov", "dic"
+  ];
 
   const formatFecha = (fechaStr: string) => {
     const [año, mes, dia] = fechaStr.split("-");
     return `${parseInt(dia, 10)} ${mesesCortos[parseInt(mes, 10) - 1]}`;
   };
 
+  const handleEventClick = (event: CalendarEvent, e?: React.MouseEvent) => {
+    if (e) {
+      e.stopPropagation();
+    }
+    // Navigate based on event type
+    if (event.type === "assignment" || event.type === "project") {
+      // Navigate to assignment detail page
+      navigate(`/curso/${event.courseId}/tarea/${event.id}`);
+    } else {
+      // For exams and other events, navigate to course materials tab
+      navigate(`/curso/${event.courseId}?tab=materials`);
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      {/* Calendar */}
-      <Card className="lg:col-span-2 p-6">
+      {/* Upcoming Deadlines - A LA IZQUIERDA */}
+      <Card className="lg:order-1 p-6">
+        <h3 className="text-xl font-bold text-foreground mb-4">Próximas Evaluaciones</h3>
+        <div className="space-y-3">
+          {upcomingEvents.map(event => {
+            const Icon = getEventIcon(event.type);
+            return (
+              <div
+                key={event.id}
+                className="p-3 rounded-lg border border-border hover:bg-muted/50 transition-colors cursor-pointer"
+                onClick={() => handleEventClick(event)}
+              >
+                <div className="flex items-start gap-3">
+                  <div className={`${getEventColor(event.type)} p-2 rounded-lg`}>
+                    <Icon className="h-4 w-4 text-white" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <Badge variant="outline" className="mb-1 text-xs">
+                      {event.courseName}
+                    </Badge>
+                    <p className="text-sm font-medium text-foreground truncate">
+                      {event.title}
+                    </p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <p className="text-xs text-muted-foreground">
+                        {formatFecha(event.date)}
+                      </p>
+                      <span className="text-xs font-medium text-primary">
+                        {getDaysUntil(event.date)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </Card>
+
+      {/* Calendar - A LA DERECHA */}
+      <Card className="lg:col-span-2 lg:order-2 p-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-foreground">
             {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
@@ -144,50 +199,13 @@ export const Calendar = ({ events }: CalendarProps) => {
                   {dayEvents.map(event => (
                     <div
                       key={event.id}
-                      className={`${getEventColor(event.type)} text-white text-xs px-1.5 py-0.5 rounded truncate`}
+                      className={`${getEventColor(event.type)} text-white text-xs px-1.5 py-0.5 rounded truncate cursor-pointer hover:opacity-80 transition-opacity`}
                       title={`${event.courseName}: ${event.title}`}
+                      onClick={(e) => handleEventClick(event, e)}
                     >
                       {event.title}
                     </div>
                   ))}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </Card>
-
-      {/* Upcoming Deadlines */}
-      <Card className="p-6">
-        <h3 className="text-xl font-bold text-foreground mb-4">Próximas Evaluaciones</h3>
-        <div className="space-y-3">
-          {upcomingEvents.map(event => {
-            const Icon = getEventIcon(event.type);
-            return (
-              <div
-                key={event.id}
-                className="p-3 rounded-lg border border-border hover:bg-muted/50 transition-colors"
-              >
-                <div className="flex items-start gap-3">
-                  <div className={`${getEventColor(event.type)} p-2 rounded-lg`}>
-                    <Icon className="h-4 w-4 text-white" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <Badge variant="outline" className="mb-1 text-xs">
-                      {event.courseRealName}
-                    </Badge>
-                    <p className="text-sm font-medium text-foreground truncate">
-                      {event.title}
-                    </p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <p className="text-xs text-muted-foreground">
-                        {formatFecha(event.date)}
-                      </p>
-                      <span className="text-xs font-medium text-primary">
-                        {getDaysUntil(event.date)}
-                      </span>
-                    </div>
-                  </div>
                 </div>
               </div>
             );
