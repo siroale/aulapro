@@ -12,6 +12,13 @@ import {
 import { Badge } from "@/components/ui/badge";
 
 export const Navbar = () => {
+  const handleLogout = () => {
+    // Aquí puedes agregar tu lógica de cierre de sesión
+    // Por ejemplo: limpiar tokens, redirigir, etc.
+    console.log("Cerrando sesión...");
+    // window.location.href = "/login";
+  };
+
   return (
     <nav className="sticky top-0 z-50 bg-card border-b shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -83,10 +90,13 @@ export const Navbar = () => {
               <DropdownMenuContent align="end" className="bg-popover">
                 <DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Perfil</DropdownMenuItem>
-                <DropdownMenuItem>Configuración</DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <a href="/perfil" className="cursor-pointer">Perfil</a>
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Cerrar sesión</DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
+                  Cerrar sesión
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
