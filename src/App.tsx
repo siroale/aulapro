@@ -8,6 +8,7 @@ import CalendarPage from "./pages/CalendarPage";
 import CoursePage from "./pages/CoursePage";
 import ThreadDetailPage from "./pages/ThreadDetailPage";
 import AssignmentDetailPage from "./pages/AssignmentDetailPage";
+import { Perfil } from "./pages/Perfil";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -21,6 +22,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/calendario" element={<CalendarPage />} />
+          <Route path="/perfil" element={<Perfil />} />
           <Route path="/curso/:courseId" element={<CoursePage />} />
           <Route path="/curso/:courseId/foro/:threadId" element={<ThreadDetailPage />} />
           <Route path="/curso/:courseId/tarea/:assignmentId" element={<AssignmentDetailPage />} />
