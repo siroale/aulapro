@@ -46,38 +46,7 @@ export const Navbar = () => {
 
           {/* Right side - notifications, user */}
           <div className="flex items-center gap-2 sm:gap-4">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="relative">
-                  <Bell className="h-5 w-5" />
-                  <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-accent text-xs">
-                    3
-                  </Badge>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-72 bg-popover">
-                <DropdownMenuLabel>Notificaciones</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <div className="flex flex-col gap-1">
-                    <p className="text-sm font-medium">Nueva tarea disponible</p>
-                    <p className="text-xs text-muted-foreground">DEF-101 - Hace 2 horas</p>
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <div className="flex flex-col gap-1">
-                    <p className="text-sm font-medium">Calificación publicada</p>
-                    <p className="text-xs text-muted-foreground">IND-201 - Hace 5 horas</p>
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <div className="flex flex-col gap-1">
-                    <p className="text-sm font-medium">Recordatorio de examen</p>
-                    <p className="text-xs text-muted-foreground">IND-305 - Hace 1 día</p>
-                  </div>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

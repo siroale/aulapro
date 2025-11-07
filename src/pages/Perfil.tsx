@@ -49,142 +49,146 @@ const Perfil = () => {
           <p className="text-muted-foreground mt-2">Información personal y académica</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Columna izquierda - Foto y datos básicos */}
-          <div className="lg:col-span-1 space-y-6">
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex flex-col items-center">
-                  <div className="h-32 w-32 rounded-full bg-primary flex items-center justify-center mb-4">
-                    <User className="h-16 w-16 text-primary-foreground" />
-                  </div>
-                  <h2 className="text-xl font-semibold text-center">{userData.nombre}</h2>
-                  <p className="text-sm text-muted-foreground text-center mt-1">{userData.numeroEstudiante}</p>
-                  <Badge className="mt-3">{userData.carrera}</Badge>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Columna derecha - Información detallada */}
-          <div className="lg:col-span-2 space-y-6">
-            <Card>
-              <CardHeader>
-                <div className="flex justify-between items-center">
-                  <div>
-                    <CardTitle>Información Personal</CardTitle>
-                    <CardDescription>Actualiza tus datos de contacto</CardDescription>
-                  </div>
-                  {!isEditing ? (
-                    <Button onClick={() => setIsEditing(true)} variant="outline" size="sm">
-                      <Edit2 className="h-4 w-4 mr-2" />
-                      Editar
-                    </Button>
-                  ) : (
-                    <div className="flex gap-2">
-                      <Button onClick={handleSave} size="sm">
-                        <Save className="h-4 w-4 mr-2" />
-                        Guardar
-                      </Button>
-                      <Button onClick={handleCancel} variant="outline" size="sm">
-                        <X className="h-4 w-4 mr-2" />
-                        Cancelar
-                      </Button>
+        <div className="space-y-6">
+          {/* Fila superior - Foto de perfil e Información Personal */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Tarjeta de perfil */}
+            <div className="lg:col-span-1">
+              <Card className="h-full">
+                <CardContent className="pt-6">
+                  <div className="flex flex-col items-center">
+                    <div className="h-32 w-32 rounded-full bg-primary flex items-center justify-center mb-4">
+                      <User className="h-16 w-16 text-primary-foreground" />
                     </div>
-                  )}
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="nombre" className="flex items-center gap-2">
-                      <User className="h-4 w-4" />
-                      Nombre Completo
-                    </Label>
-                    {isEditing ? (
-                      <Input
-                        id="nombre"
-                        value={editedData.nombre}
-                        onChange={(e) => setEditedData({ ...editedData, nombre: e.target.value })}
-                      />
+                    <h2 className="text-xl font-semibold text-center">{userData.nombre}</h2>
+                    <p className="text-sm text-muted-foreground text-center mt-1">{userData.numeroEstudiante}</p>
+                    <Badge className="mt-3 hover:bg-primary">{userData.carrera}</Badge>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Información Personal */}
+            <div className="lg:col-span-2">
+              <Card className="h-full">
+                <CardHeader>
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <CardTitle>Información Personal</CardTitle>
+                      <CardDescription>Actualiza tus datos de contacto</CardDescription>
+                    </div>
+                    {!isEditing ? (
+                      <Button onClick={() => setIsEditing(true)} variant="outline" size="sm">
+                        <Edit2 className="h-4 w-4 mr-2" />
+                        Editar
+                      </Button>
                     ) : (
-                      <p className="text-sm font-medium py-2">{userData.nombre}</p>
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="email" className="flex items-center gap-2">
-                      <Mail className="h-4 w-4" />
-                      Correo Electrónico
-                    </Label>
-                    {isEditing ? (
-                      <Input
-                        id="email"
-                        type="email"
-                        value={editedData.email}
-                        onChange={(e) => setEditedData({ ...editedData, email: e.target.value })}
-                      />
-                    ) : (
-                      <p className="text-sm font-medium py-2">{userData.email}</p>
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="telefono" className="flex items-center gap-2">
-                      <Phone className="h-4 w-4" />
-                      Teléfono
-                    </Label>
-                    {isEditing ? (
-                      <Input
-                        id="telefono"
-                        value={editedData.telefono}
-                        onChange={(e) => setEditedData({ ...editedData, telefono: e.target.value })}
-                      />
-                    ) : (
-                      <p className="text-sm font-medium py-2">{userData.telefono}</p>
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4" />
-                      Número de Estudiante
-                    </Label>
-                    <p className="text-sm font-medium py-2">{userData.numeroEstudiante}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BookOpen className="h-5 w-5" />
-                  Cursos Actuales
-                </CardTitle>
-                <CardDescription>Semestre en curso</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {cursosActuales.map((curso) => (
-                    <div
-                      key={curso.codigo}
-                      className="flex flex-col p-4 border rounded-lg"
-                    >
-                      <div className="flex items-start justify-between mb-2">
-                        <div>
-                          <p className="font-semibold text-lg">{curso.codigo}</p>
-                          <Badge variant="secondary" className="mt-1">{curso.creditos} créditos</Badge>
-                        </div>
+                      <div className="flex gap-2">
+                        <Button onClick={handleSave} size="sm">
+                          <Save className="h-4 w-4 mr-2" />
+                          Guardar
+                        </Button>
+                        <Button onClick={handleCancel} variant="outline" size="sm">
+                          <X className="h-4 w-4 mr-2" />
+                          Cancelar
+                        </Button>
                       </div>
-                      <p className="text-sm text-muted-foreground mb-1">{curso.nombre}</p>
-                      <p className="text-xs text-muted-foreground">{curso.instructor}</p>
+                    )}
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="nombre" className="flex items-center gap-2">
+                        <User className="h-4 w-4" />
+                        Nombre Completo
+                      </Label>
+                      {isEditing ? (
+                        <Input
+                          id="nombre"
+                          value={editedData.nombre}
+                          onChange={(e) => setEditedData({ ...editedData, nombre: e.target.value })}
+                        />
+                      ) : (
+                        <p className="text-sm font-medium py-2">{userData.nombre}</p>
+                      )}
                     </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="email" className="flex items-center gap-2">
+                        <Mail className="h-4 w-4" />
+                        Correo Electrónico
+                      </Label>
+                      {isEditing ? (
+                        <Input
+                          id="email"
+                          type="email"
+                          value={editedData.email}
+                          onChange={(e) => setEditedData({ ...editedData, email: e.target.value })}
+                        />
+                      ) : (
+                        <p className="text-sm font-medium py-2">{userData.email}</p>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="telefono" className="flex items-center gap-2">
+                        <Phone className="h-4 w-4" />
+                        Teléfono
+                      </Label>
+                      {isEditing ? (
+                        <Input
+                          id="telefono"
+                          value={editedData.telefono}
+                          onChange={(e) => setEditedData({ ...editedData, telefono: e.target.value })}
+                        />
+                      ) : (
+                        <p className="text-sm font-medium py-2">{userData.telefono}</p>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="flex items-center gap-2">
+                        <Calendar className="h-4 w-4" />
+                        Rol USM
+                      </Label>
+                      <p className="text-sm font-medium py-2">{userData.numeroEstudiante}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
+
+          {/* Fila inferior - Cursos Actuales (ancho completo) */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BookOpen className="h-5 w-5" />
+                Cursos Actuales
+              </CardTitle>
+              <CardDescription>Semestre en curso</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                {cursosActuales.map((curso) => (
+                  <div
+                    key={curso.codigo}
+                    className="flex flex-col p-4 border rounded-lg"
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <div>
+                        <p className="font-semibold text-lg">{curso.codigo}</p>
+                        <Badge variant="secondary" className="mt-1">{curso.creditos} créditos</Badge>
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-1">{curso.nombre}</p>
+                    <p className="text-xs text-muted-foreground">{curso.instructor}</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
