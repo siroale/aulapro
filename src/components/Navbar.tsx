@@ -1,5 +1,4 @@
 import { Bell, Menu, User } from "lucide-react";
-import logoUsm from "@/assets/logo-usm.png";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,6 +11,10 @@ import {
 import { Badge } from "@/components/ui/badge";
 
 export const Navbar = () => {
+  // Get current path from window.location
+  const currentPath = window.location.pathname;
+  const isActive = (path: string) => currentPath === path;
+
   const handleLogout = () => {
     // Aquí puedes agregar tu lógica de cierre de sesión
     // Por ejemplo: limpiar tokens, redirigir, etc.
@@ -28,17 +31,27 @@ export const Navbar = () => {
             {/* University Logo - Replace logo-usm.png in src/assets folder with your logo */}
             <a href="/" className="flex items-center">
               <img 
-                src={logoUsm} 
+                src="/src/assets/logo-usm.png" 
                 alt="Universidad Técnica Federico Santa María" 
                 className="h-12 w-auto object-contain"
               />
             </a>
             
             <div className="hidden md:flex items-center gap-4">
-              <Button variant="ghost" size="sm" asChild>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                asChild
+                className={isActive("/") ? "bg-blue-100 text-blue-700 hover:bg-blue-200 hover:text-blue-800 dark:bg-blue-900 dark:text-blue-200 dark:hover:bg-blue-800" : ""}
+              >
                 <a href="/">Página Principal</a>
               </Button>
-              <Button variant="ghost" size="sm" asChild>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                asChild
+                className={isActive("/calendario") ? "bg-blue-100 text-blue-700 hover:bg-blue-200 hover:text-blue-800 dark:bg-blue-900 dark:text-blue-200 dark:hover:bg-blue-800" : ""}
+              >
                 <a href="/calendario">Calendario</a>
               </Button>
             </div>
