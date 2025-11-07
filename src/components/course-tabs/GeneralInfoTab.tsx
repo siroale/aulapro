@@ -47,7 +47,7 @@ export const GeneralInfoTab = ({ course }: GeneralInfoTabProps) => {
   };
 
   const handleDownload = () => {
-    window.open("/mockup.pdf", "_blank");
+    window.open("https://drive.google.com/file/d/1TAU46-xzQg3QiTcOaj50xAh1pBUAWX7Y/view?usp=sharing", "_blank");
   };
 
   return (
