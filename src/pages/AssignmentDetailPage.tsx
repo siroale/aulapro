@@ -11,7 +11,6 @@ export default function AssignmentDetailPage() {
   const { courseId, assignmentId } = useParams();
   const navigate = useNavigate();
 
-  // Find the course
   const course = courses.find((c) => c.id === courseId);
 
   if (!course) {
@@ -27,17 +26,16 @@ export default function AssignmentDetailPage() {
     );
   }
 
-  // Mock assignment data - in a real app, this would come from the database
   const assignment = {
     id: assignmentId,
-    title: "Tarea 1: Análisis de Sistemas",
-    dueDate: "2025-10-15",
+    title: "Entrega Proyecto 1",
+    dueDate: "2025-11-20",
     dueTime: "23:59",
-    description: "Realizar un análisis completo del sistema propuesto, identificando componentes clave, flujos de datos y posibles mejoras. El trabajo debe incluir diagramas de flujo, análisis de requisitos y propuestas de optimización.",
+    description: "Proyecto introductorio de Sistemas Distribuidos donde deberás implementar un sistema cliente-servidor básico. El objetivo es familiarizarse con los conceptos fundamentales de comunicación entre procesos distribuidos, incluyendo sockets, protocolos de comunicación y manejo de concurrencia. El proyecto debe incluir documentación técnica, código fuente debidamente comentado y un informe explicando las decisiones de diseño tomadas.",
     attachedFiles: [
-      { id: "1", name: "Enunciado.pdf", size: "2.4 MB" },
-      { id: "2", name: "Instrucciones.pdf", size: "1.1 MB" },
-      { id: "3", name: "Rúbrica.pdf", size: "850 KB" },
+      { id: "1", name: "Enunciado_Proyecto1.pdf", size: "1.8 MB" },
+      { id: "2", name: "Guia_Implementacion.pdf", size: "950 KB" },
+      { id: "3", name: "Rubrica_Evaluacion.pdf", size: "720 KB" },
     ],
     status: "pending" as "pending" | "submitted" | "graded",
     submittedFile: null,
@@ -45,7 +43,6 @@ export default function AssignmentDetailPage() {
   };
 
   const handleFileOpen = () => {
-    // Open PDF in new tab (same as materials)
     window.open("https://drive.google.com/file/d/1TAU46-xzQg3QiTcOaj50xAh1pBUAWX7Y/view?usp=sharing", "_blank");
   };
 
