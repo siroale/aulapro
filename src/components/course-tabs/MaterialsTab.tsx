@@ -15,7 +15,11 @@ type SectionType = "catedra" | "laboratorio" | "ayudantia";
 
 export const MaterialsTab = ({ course }: MaterialsTabProps) => {
   const [viewMode, setViewMode] = useState<"default" | "minimal">("default");
-  const [activeSection, setActiveSection] = useState<SectionType>("catedra");
+  
+  // Get available sections from course or default to all sections
+  const availableSections = course.availableSections || ["catedra", "laboratorio", "ayudantia"];
+  const [activeSection, setActiveSection] = useState<SectionType>(availableSections[0] as SectionType);
+  
   // Units expanded by default, modules collapsed by default
   const [expandedModules, setExpandedModules] = useState<string[]>(
     course.modules.map((m) => m.id)
@@ -530,30 +534,36 @@ export const MaterialsTab = ({ course }: MaterialsTabProps) => {
       <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
         {/* Section Navigation - LEFT SIDE */}
         <div className="inline-flex rounded-lg border-2 border-border bg-muted/30 p-1">
-          <Button
-            variant={activeSection === "catedra" ? "default" : "ghost"}
-            size="sm"
-            onClick={() => setActiveSection("catedra")}
-            className="w-32"
-          >
-            Cátedra
-          </Button>
-          <Button
-            variant={activeSection === "laboratorio" ? "default" : "ghost"}
-            size="sm"
-            onClick={() => setActiveSection("laboratorio")}
-            className="w-32"
-          >
-            Laboratorio
-          </Button>
-          <Button
-            variant={activeSection === "ayudantia" ? "default" : "ghost"}
-            size="sm"
-            onClick={() => setActiveSection("ayudantia")}
-            className="w-32"
-          >
-            Ayudantía
-          </Button>
+          {availableSections.includes("catedra") && (
+            <Button
+              variant={activeSection === "catedra" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setActiveSection("catedra")}
+              className="w-32"
+            >
+              Cátedra
+            </Button>
+          )}
+          {availableSections.includes("laboratorio") && (
+            <Button
+              variant={activeSection === "laboratorio" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setActiveSection("laboratorio")}
+              className="w-32"
+            >
+              Laboratorio
+            </Button>
+          )}
+          {availableSections.includes("ayudantia") && (
+            <Button
+              variant={activeSection === "ayudantia" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setActiveSection("ayudantia")}
+              className="w-32"
+            >
+              Ayudantía
+            </Button>
+          )}
         </div>
 
         {/* View Toggle - RIGHT SIDE */}
