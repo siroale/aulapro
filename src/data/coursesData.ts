@@ -1,3 +1,5 @@
+import { images } from "@/assets/images";
+
 export interface Course {
   id: string;
   code: string;
@@ -70,7 +72,7 @@ export const courses: Course[] = [
     code: "INF-285",
     name: "Computación Científica",
     department: "INFORMATICA",
-    image: "src/assets/realcc.png",
+    image: images.realcc,
     description: "Curso sobre métodos numéricos y computacionales aplicados a problemas científicos.",
     instructor: "Roberto León",
     modules: [
@@ -176,7 +178,7 @@ export const courses: Course[] = [
     code: "ICN-270",
     name: "Información y Matemática Financiera",
     department: "INDUSTRIAS",
-    image: "src/assets/imafi.jpg",
+    image: images.imafi,
     description: "Análisis financiero y matemáticas aplicadas a la toma de decisiones empresariales.",
     instructor: "Myriam Olea",
     modules: [
@@ -269,7 +271,7 @@ export const courses: Course[] = [
     code: "INF-343",
     name: "Sistemas Distribuidos",
     department: "INFORMATICA",
-    image: "src/assets/dist.jpg",
+    image: images.dist,
     description: "Diseño, implementación y análisis de sistemas distribuidos y arquitecturas escalables.",
     instructor: "Jorge Díaz",
     modules: [
@@ -362,7 +364,7 @@ export const courses: Course[] = [
     code: "INF-266",
     name: "Sistemas de Gestión",
     department: "INFORMATICA",
-    image: "src/assets/sistemasgestion.jpg",
+    image: images.sistemasgestion,
     description: "Análisis, diseño e implementación de sistemas de información para la gestión empresarial.",
     instructor: "Mauricio Olivares",
     modules: [
