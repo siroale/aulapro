@@ -9,6 +9,7 @@ export interface Course {
   description: string;
   instructor: string;
   modules: Module[];
+  availableSections?: ("catedra" | "laboratorio" | "ayudantia")[]; // Optional: if not specified, all sections are available
 }
 
 export interface Module {
@@ -75,6 +76,7 @@ export const courses: Course[] = [
     image: images.realcc,
     description: "Curso sobre métodos numéricos y computacionales aplicados a problemas científicos.",
     instructor: "Roberto León",
+    availableSections: ["catedra", "laboratorio"], // No ayudantía
     modules: [
       {
         id: "m1",
