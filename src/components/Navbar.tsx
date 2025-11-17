@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
+import { images } from "@/assets/images";
 
 export const Navbar = () => {
   // Get current path from window.location
@@ -31,7 +32,7 @@ export const Navbar = () => {
             {/* University Logo - Replace logo-usm.png in src/assets folder with your logo */}
             <a href="/" className="flex items-center">
               <img 
-                src="/src/assets/logo-usm.png" 
+                src={images.logoUsm} 
                 alt="Universidad Técnica Federico Santa María" 
                 className="h-12 w-auto object-contain"
               />
